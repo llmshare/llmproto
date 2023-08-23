@@ -1,6 +1,13 @@
 {
   "dependencies": {
     "langchain": "^0.0.132",
-    "rete": "^2.0.2"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "rete": "^2.0.2",
+    "rete-area-plugin": "^2.0.0",
+    "rete-connection-plugin": "^2.0.0",
+    "rete-react-plugin": "^2.0.1",
+    "rete-render-utils": "^2.0.1",
+    "styled-components": "^6.0.7"
   }
 }
