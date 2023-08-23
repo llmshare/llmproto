@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "langchain": "^0.0.132",
+    "rete": "^2.0.2"
+  }
+}
