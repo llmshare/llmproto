@@ -12,10 +12,14 @@ type Schemes = GetSchemes<
   ClassicPreset.Connection<ClassicPreset.Node, ClassicPreset.Node>
 >;
 type AreaExtra = ReactArea2D<Schemes>;
-
+const socket = new ClassicPreset.Socket("socket");
+class TextNode extends ClassicPreset.Node {
+  constructor(public value: string,public value2: string) {
+    super(value);
+    this.addOutput("value", new ClassicPreset.Output(socket, value));
+  }
+}
 export async function createEditor(container: HTMLElement) {
-  const socket = new ClassicPreset.Socket("socket");
-
   const editor = new NodeEditor<Schemes>();
   const area = new AreaPlugin<Schemes, AreaExtra>(container);
   const connection = new ConnectionPlugin<Schemes, AreaExtra>();
@@ -34,82 +38,60 @@ export async function createEditor(container: HTMLElement) {
   area.use(render);
 
   AreaExtensions.simpleNodesOrder(area);
-
-  const a = new ClassicPreset.Node("A");
-  a.addControl("a", new ClassicPreset.InputControl("text", { initial: "a" }));
-  a.addOutput("a", new ClassicPreset.Output(socket));
-  a.addOutput("a1", new ClassicPreset.Output(socket));
+  const a = new TextNode("A");
   await editor.addNode(a);
-
-  const a1 = new ClassicPreset.Node("A1");
-  a1.addControl(
+  a.addControl(
     "a1",
     new ClassicPreset.InputControl("text", { initial: "a1" })
   );
-  a1.addInput("a1", new ClassicPreset.Input(socket));
-  await editor.addNode(a1);
-  await editor.addConnection(new ClassicPreset.Connection(a, "a1", a1, "a1"));
-
-  const b = new ClassicPreset.Node("B");
-  b.addControl("b", new ClassicPreset.InputControl("text", { initial: "b" }));
-  b.addInput("b", new ClassicPreset.Input(socket));
-  b.addOutput("b", new ClassicPreset.Output(socket));
-  b.addOutput("b1", new ClassicPreset.Output(socket));
+  
+  const b = new TextNode("B");
   await editor.addNode(b);
-
-  const b1 = new ClassicPreset.Node("B1");
-  b1.addControl(
+  b.addControl(
     "b1",
-    new ClassicPreset.InputControl("text", { initial: "b1" })
+    new ClassicPreset.InputControl("text", { initial: "a1" })
   );
-  b1.addInput("b1", new ClassicPreset.Input(socket));
-  await editor.addNode(b1);
-  await editor.addConnection(new ClassicPreset.Connection(b, "b1", b1, "b1"));
-
-  const c = new ClassicPreset.Node("C");
-  c.addControl("c", new ClassicPreset.InputControl("text", { initial: "c" }));
-  c.addInput("c", new ClassicPreset.Input(socket));
-  c.addOutput("c", new ClassicPreset.Output(socket));
-  c.addOutput("c1", new ClassicPreset.Output(socket));
+  const c = new TextNode("C");
   await editor.addNode(c);
-
-  const c1 = new ClassicPreset.Node("c1");
-  c1.addControl(
+  c.addControl(
     "c1",
     new ClassicPreset.InputControl("text", { initial: "c1" })
   );
-  c1.addInput("c1", new ClassicPreset.Input(socket));
-  await editor.addNode(c1);
-  await editor.addConnection(new ClassicPreset.Connection(c, "c1", c1, "c1"));
-
-  const d = new ClassicPreset.Node("D");
-  d.addControl("d", new ClassicPreset.InputControl("text", { initial: "d" }));
-  d.addInput("d", new ClassicPreset.Input(socket));
-  d.addOutput("d", new ClassicPreset.Output(socket));
-  d.addOutput("d1", new ClassicPreset.Output(socket));
+  const d = new TextNode("D");
   await editor.addNode(d);
-
-  const d1 = new ClassicPreset.Node("d1");
-  d1.addControl(
+  d.addControl(
     "d1",
     new ClassicPreset.InputControl("text", { initial: "d1" })
   );
-  d1.addInput("d1", new ClassicPreset.Input(socket));
-  await editor.addNode(d1);
-  await editor.addConnection(new ClassicPreset.Connection(d, "d1", d1, "d1"));
+  const e = new TextNode("E");
+  await editor.addNode(e);
+  e.addControl(
+    "e1",
+    new ClassicPreset.InputControl("text", { initial: "e1" })
+  );
+  const f = new TextNode("f");
+  await editor.addNode(f);
+  f.addControl(
+    "f1",
+    new ClassicPreset.InputControl("text", { initial: "f1" })
+  );
+  const g = new TextNode("g");
+  await editor.addNode(g);
+  g.addControl(
+    "g1",
+    new ClassicPreset.InputControl("text", { initial: "g1" })
+  );
 
-  await editor.addConnection(new ClassicPreset.Connection(a, "a", b, "b"));
-  await editor.addConnection(new ClassicPreset.Connection(b, "b", c, "c"));
-  await editor.addConnection(new ClassicPreset.Connection(c, "c", d, "d"));
+  // // await editor.addConnection(new ClassicPreset.Connection(a, "a", b, "b"));
+  // await editor.addConnection(new ClassicPreset.Connection(b, "b", c, "c"));
+  // await editor.addConnection(new ClassicPreset.Connection(c, "c", d, "d"));
+  // await editor.addConnection(new ClassicPreset.Connection(d, "d", e, "e"));
+  // await editor.addConnection(new ClassicPreset.Connection(e, "e", f, "f"));
 
-  await area.translate(a.id, { x: -450, y: 0 });
-  await area.translate(b.id, { x: -150, y: 0 });
-  await area.translate(c.id, { x: 200, y: 0 });
-  await area.translate(d.id, { x: 500, y: 0 });
-  await area.translate(a1.id, { x: -275, y: 250 });
-  await area.translate(b1.id, { x: 25, y: 250 });
-  await area.translate(c1.id, { x: 325, y: 250 });
-  await area.translate(d1.id, { x: 575, y: 250 });
+  // // await area.translate(a.id, { x: -450, y: 0 });
+  // await area.translate(b.id, { x: -150, y: 0 });
+  // await area.translate(c.id, { x: 200, y: 0 });
+  // await area.translate(d.id, { x: 500, y: 0 });
 
   setTimeout(() => {
     // wait until nodes rendered because they dont have predefined width and height
