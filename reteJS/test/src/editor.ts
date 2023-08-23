@@ -10,15 +10,92 @@ import {
   AutoArrangePlugin,
   Presets as ArrangePresets
 } from "rete-auto-arrange-plugin";
-import { DataflowEngine } from "rete-engine";
+import { DataflowEngine, ControlFlowEngine } from "rete-engine";
 import {
   ContextMenuExtra,
   ContextMenuPlugin,
   Presets as ContextMenuPresets
 } from "rete-context-menu-plugin";
+import { log } from "console";
 
 const socket = new ClassicPreset.Socket("socket");
 
+class Start extends ClassicPreset.Node<{}, { exec: ClassicPreset.Socket }, {}> {
+    width = 180;
+    height = 90;
+  
+    constructor() {
+      super("Start");
+      this.addOutput("exec", new ClassicPreset.Output(socket, "Exec"));
+    }
+  
+    execute(_: never, forward: (output: "exec") => void) {
+      forward("exec");
+    }
+  
+    data() {
+      return {};
+    }
+  }
+class Log extends ClassicPreset.Node<
+  { exec: ClassicPreset.Socket; message: ClassicPreset.Socket },
+  { exec: ClassicPreset.Socket },
+  {}
+> {
+  width = 180;
+  height = 150;
+
+  constructor(
+    private log: (text: string) => void,
+    private dataflow: DataflowEngine<Schemes>
+  ) {
+    super("Log");
+
+    this.addInput("exec", new ClassicPreset.Input(socket, "Exec", true));
+    this.addInput("message", new ClassicPreset.Input(socket, "Text"));
+    this.addOutput("exec", new ClassicPreset.Output(socket, "Exec"));
+  }
+
+  async execute(input: "exec", forward: (output: "exec") => void) {
+    const inputs = (await this.dataflow.fetchInputs(this.id)) as {
+      message: string[];
+    };
+
+    this.log((inputs.message && inputs.message[0]) || "");
+
+    forward("exec");
+  }
+
+  data() {
+    return {};
+  }
+}
+
+class TextNode extends ClassicPreset.Node<
+  {},
+  { value: ClassicPreset.Socket },
+  { value: ClassicPreset.InputControl<"text"> }
+> {
+  height = 120;
+  width = 180;
+
+  constructor(initial: string) {
+    super("Text");
+    this.addControl(
+      "value",
+      new ClassicPreset.InputControl("text", { initial })
+    );
+    this.addOutput("value", new ClassicPreset.Output(socket, "Number"));
+  }
+
+  execute() {}
+
+  data(): { value: string } {
+    return {
+      value: this.controls.value.value || ""
+    };
+  }
+}
 class NumberNode extends ClassicPreset.Node<
   {},
   { value: ClassicPreset.Socket },
@@ -55,9 +132,9 @@ class AddNode extends ClassicPreset.Node<
     change?: () => void,
     private update?: (control: ClassicPreset.InputControl<"number">) => void
   ) {
-    super("Add");
-    const left = new ClassicPreset.Input(socket, "Left");
-    const right = new ClassicPreset.Input(socket, "Right");
+    super("Adder");
+    const left = new ClassicPreset.Input(socket, "num1");
+    const right = new ClassicPreset.Input(socket, "num2");
 
     left.addControl(
       new ClassicPreset.InputControl("number", { initial: 0, change })
@@ -99,12 +176,22 @@ class AddNode extends ClassicPreset.Node<
 
 class Connection<
   A extends Node,
-  B extends Node
+  B extends Node,
 > extends ClassicPreset.Connection<A, B> {}
 
-type Node = NumberNode | AddNode;
+class ConnectionFlow<
+  A extends NodeProps,
+  B extends NodeProps
+> extends ClassicPreset.Connection<A, B> {
+  isLoop?: boolean;
+}
+
+type Node = NumberNode | AddNode ;
+type NodeProps = Start | Log | TextNode;
 type ConnProps = Connection<NumberNode, AddNode> | Connection<AddNode, AddNode>;
+type ConnectionProps=ConnectionFlow<Start, Log>|ConnectionFlow<TextNode, Log>
 type Schemes = GetSchemes<Node, ConnProps>;
+type Schema = GetSchemes<NodeProps, ConnectionProps>;
 
 type AreaExtra = ReactArea2D<any> | ContextMenuExtra;
 
@@ -114,6 +201,18 @@ export async function createEditor(container: HTMLElement) {
   const connection = new ConnectionPlugin<Schemes, AreaExtra>();
   const render = new ReactPlugin<Schemes, AreaExtra>({ createRoot });
   const arrange = new AutoArrangePlugin<Schemes>();
+  const dataflow = new DataflowEngine<Schemes>(({ inputs, outputs }) => {
+    return {
+      inputs: () => Object.keys(inputs).filter((name) => name !== "exec"),
+      outputs: () => Object.keys(outputs).filter((name) => name !== "exec")
+    };
+  });
+  const engines = new ControlFlowEngine<Schema>(() => {
+    return {
+      inputs: () => ["exec"],
+      outputs: () => ["exec"]
+    };
+  });
   const engine = new DataflowEngine<Schemes>();
 
   function process() {
@@ -125,10 +224,13 @@ export async function createEditor(container: HTMLElement) {
       .forEach((n) => engine.fetch(n.id));
   }
 
-  const contextMenu = new ContextMenuPlugin<Schemes>({
+  const contextMenu = new ContextMenuPlugin<Schemes|Schema>({
     items: ContextMenuPresets.classic.setup([
       ["Number", () => new NumberNode(0, process)],
-      ["Add", () => new AddNode(process, (c) => area.update("control", c.id))]
+      ["Add", () => new AddNode(process, (c) => area.update("control", c.id))],
+      ["Start", () => new Start()],
+      ["Log", () => new Log(log, dataflow)],
+      ["Text", () => new TextNode("")]
     ])
   });
   area.use(contextMenu);
@@ -153,6 +255,13 @@ export async function createEditor(container: HTMLElement) {
   AreaExtensions.simpleNodesOrder(area);
   AreaExtensions.showInputControl(area);
 
+  const start = new Start();
+  const text1 = new TextNode("log");
+  const log1 = new Log(log, dataflow);
+
+  const cont1 = new ConnectionFlow(start, "exec", log1, "exec");
+  const cont2 = new ConnectionFlow(text1, "value", log1, "message");
+
   editor.addPipe((context) => {
     if (["connectioncreated", "connectionremoved"].includes(context.type)) {
       process();
@@ -173,6 +282,13 @@ export async function createEditor(container: HTMLElement) {
 
   await editor.addConnection(con1);
   await editor.addConnection(con2);
+
+//   await editor.addNode(start);
+//   await editor.addNode(text1);
+//   await editor.addNode(log1);
+
+//   await editor.addConnection(cont1);
+//   await editor.addConnection(cont2);
 
   await arrange.layout();
   AreaExtensions.zoomAt(area, editor.getNodes());
