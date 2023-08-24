@@ -16,7 +16,6 @@ import {
   ContextMenuPlugin,
   Presets as ContextMenuPresets
 } from "rete-context-menu-plugin";
-import { log } from "console";
 
 const socket = new ClassicPreset.Socket("socket");
 
@@ -46,7 +45,7 @@ class Log extends ClassicPreset.Node<
   height = 150;
 
   constructor(
-    private log: (text: string) => void,
+    private logs: (text: string) => void,
     private dataflow: DataflowEngine<Schemes>
   ) {
     super("Log");
@@ -61,7 +60,7 @@ class Log extends ClassicPreset.Node<
       message: string[];
     };
 
-    this.log((inputs.message && inputs.message[0]) || "");
+    this.logs((inputs.message && inputs.message[0]) || "");
 
     forward("exec");
   }
@@ -224,12 +223,13 @@ export async function createEditor(container: HTMLElement) {
       .forEach((n) => engine.fetch(n.id));
   }
 
+
+  
   const contextMenu = new ContextMenuPlugin<Schemes|Schema>({
     items: ContextMenuPresets.classic.setup([
       ["Number", () => new NumberNode(0, process)],
       ["Add", () => new AddNode(process, (c) => area.update("control", c.id))],
       ["Start", () => new Start()],
-      ["Log", () => new Log(log, dataflow)],
       ["Text", () => new TextNode("")]
     ])
   });
@@ -255,13 +255,6 @@ export async function createEditor(container: HTMLElement) {
   AreaExtensions.simpleNodesOrder(area);
   AreaExtensions.showInputControl(area);
 
-  const start = new Start();
-  const text1 = new TextNode("log");
-  const log1 = new Log(log, dataflow);
-
-  const cont1 = new ConnectionFlow(start, "exec", log1, "exec");
-  const cont2 = new ConnectionFlow(text1, "value", log1, "message");
-
   editor.addPipe((context) => {
     if (["connectioncreated", "connectionremoved"].includes(context.type)) {
       process();
@@ -283,13 +276,6 @@ export async function createEditor(container: HTMLElement) {
   await editor.addConnection(con1);
   await editor.addConnection(con2);
 
-//   await editor.addNode(start);
-//   await editor.addNode(text1);
-//   await editor.addNode(log1);
-
-//   await editor.addConnection(cont1);
-//   await editor.addConnection(cont2);
-
   await arrange.layout();
   AreaExtensions.zoomAt(area, editor.getNodes());
 
@@ -297,3 +283,5 @@ export async function createEditor(container: HTMLElement) {
     destroy: () => area.destroy()
   };
 }
+
+
