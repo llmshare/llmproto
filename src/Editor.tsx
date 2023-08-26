@@ -14,16 +14,12 @@ type Schemes = GetSchemes<
 type AreaExtra = ReactArea2D<Schemes>;
 const socket = new ClassicPreset.Socket("socket");
 class TextNode extends ClassicPreset.Node {
-  constructor(public value: string,public value2: string) {
+  constructor(public value: string, public value2: string) {
     super(value);
-    this.addOutput(value2, new ClassicPreset.Output(socket, value2));
+    this.addOutput(value2, new ClassicPreset.Output(socket, value));
     this.addControl(
       "a1",
-      new ClassicPreset.InputControl("text", { initial: "" }),
-    );
-    this.addControl(
-      "a2",
-      new ClassicPreset.InputControl("text", { initial: "" }),
+      new ClassicPreset.InputControl("text", { initial: value2 })
     );
   }
 }
@@ -46,36 +42,43 @@ export async function createEditor(container: HTMLElement) {
   area.use(render);
 
   AreaExtensions.simpleNodesOrder(area);
-  const a = new TextNode("import","import");
+  const a = new TextNode("import", "langchain/llms/openai");
   await editor.addNode(a);
-  
+  a.addOutput("value", new ClassicPreset.Output(socket, "call-flow"));
 
-  const b = new TextNode("import","import");
+  const b = new TextNode("import specifier", "{ OpenAI }");
   await editor.addNode(b);
-  b.addInput("value", new ClassicPreset.Input(socket, ""));
-
-  const c = new TextNode("import","import");
+  b.addInput("value", new ClassicPreset.Input(socket, "import"));
+  // await editor.addConnection(
+  //   new ClassicPreset.Connection(a, "value", b, "value")
+  // );
+  const c = new TextNode("import", "langchain/chains");
   await editor.addNode(c);
-  c.addInput("value", new ClassicPreset.Input(socket, ""));
+  c.addOutput("value", new ClassicPreset.Output(socket, "call-flow"));
 
-  const d = new TextNode("import","import");
+  const d = new TextNode("import specifier", "{ loadSummarizationChain }");
   await editor.addNode(d);
-  d.addInput("value", new ClassicPreset.Input(socket, ""));
+  d.addInput("value", new ClassicPreset.Input(socket, "import"));
 
-  const e = new TextNode("import","import");
+  const e = new TextNode("import", "langchain/text_splitter");
   await editor.addNode(e);
-  e.addInput("value", new ClassicPreset.Input(socket, ""));
-  
-  const f = new TextNode("import","import");
-  await editor.addNode(f);
-  f.addInput("value", new ClassicPreset.Input(socket, ""));
-  
-  const g = new TextNode("import","import");
-  await editor.addNode(g);
-  g.addInput("value", new ClassicPreset.Input(socket, ""));
-  
+  e.addOutput("value", new ClassicPreset.Output(socket, "call-flow"));
 
-  // await editor.addConnection(new ClassicPreset.Connection(a, "a", b, "b"));
+  const f = new TextNode(
+    "import specifier",
+    "{ RecursiveCharacterTextSplitter }"
+  );
+  await editor.addNode(f);
+  f.addInput("value", new ClassicPreset.Input(socket, "import"));
+
+  const g = new TextNode("import", "fs");
+  await editor.addNode(g);
+  g.addOutput("value", new ClassicPreset.Output(socket, "call-flow"));
+
+  const h = new TextNode("import specifier", "fs");
+  await editor.addNode(h);
+  h.addInput("value", new ClassicPreset.Input(socket, "import"));
+
   // await editor.addConnection(new ClassicPreset.Connection(b, "b", c, "c"));
   // await editor.addConnection(new ClassicPreset.Connection(c, "c", d, "d"));
   // await editor.addConnection(new ClassicPreset.Connection(d, "d", e, "e"));
@@ -88,6 +91,7 @@ export async function createEditor(container: HTMLElement) {
   await area.translate(e.id, { x: 200, y: -100 });
   await area.translate(f.id, { x: 400, y: 0 });
   await area.translate(g.id, { x: 600, y: -100 });
+  await area.translate(h.id, { x: 800, y: 0 });
 
   setTimeout(() => {
     // wait until nodes rendered because they dont have predefined width and height
