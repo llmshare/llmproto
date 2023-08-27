@@ -4,7 +4,7 @@ import logo from './logo.svg';
 import './App.css';
 import './rete.css';
 import styled from "styled-components";
-import { createEditor } from './editor';
+import { createEditor } from './node';
 
 const Info = styled.div`
   margin: 1em;
