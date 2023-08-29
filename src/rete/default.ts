@@ -1,31 +1,31 @@
-import { ClassicPreset as Classic, GetSchemes, NodeEditor } from 'rete';
+import { ClassicPreset as Classic, GetSchemes, NodeEditor } from "rete";
 
-import { Area2D, AreaExtensions, AreaPlugin } from 'rete-area-plugin';
+import { Area2D, AreaExtensions, AreaPlugin } from "rete-area-plugin";
 
 import {
-  ReactPlugin,
-  ReactArea2D,
   Presets as ReactPresets,
-} from 'rete-react-plugin';
-import { createRoot } from 'react-dom/client';
+  ReactArea2D,
+  ReactPlugin,
+} from "rete-react-plugin";
+import { createRoot } from "react-dom/client";
 
-import { DataflowEngine, DataflowNode } from 'rete-engine';
+import { DataflowEngine, DataflowNode } from "rete-engine";
 import {
   AutoArrangePlugin,
   Presets as ArrangePresets,
-} from 'rete-auto-arrange-plugin';
-import { ReadonlyPlugin } from 'rete-readonly-plugin';
+} from "rete-auto-arrange-plugin";
+import { ReadonlyPlugin } from "rete-readonly-plugin";
 import {
-  ContextMenuPlugin,
   ContextMenuExtra,
+  ContextMenuPlugin,
   Presets as ContextMenuPresets,
-} from 'rete-context-menu-plugin';
-import { MinimapExtra, MinimapPlugin } from 'rete-minimap-plugin';
+} from "rete-context-menu-plugin";
+import { MinimapExtra, MinimapPlugin } from "rete-minimap-plugin";
 import {
-  ReroutePlugin,
-  RerouteExtra,
   RerouteExtensions,
-} from 'rete-connection-reroute-plugin';
+  RerouteExtra,
+  ReroutePlugin,
+} from "rete-connection-reroute-plugin";
 
 type Node = NumberNode | AddNode;
 type Conn =
@@ -41,20 +41,24 @@ class Connection<A extends Node, B extends Node> extends Classic.Connection<
 
 class NumberNode extends Classic.Node implements DataflowNode {
   width = 180;
+
   height = 120;
 
   constructor(initial: number, change?: (value: number) => void) {
-    super('Number');
+    super("Number");
 
-    this.addOutput('value', new Classic.Output(socket, 'Number'));
+    this.addOutput("value", new Classic.Output(socket, "Number"));
     this.addControl(
-      'value',
-      new Classic.InputControl('number', { initial, change })
+      "value",
+      new Classic.InputControl("number", {
+        initial,
+        change,
+      }),
     );
   }
+
   data() {
-    const value = (this.controls['value'] as Classic.InputControl<'number'>)
-      .value;
+    const { value } = this.controls.value as Classic.InputControl<"number">;
 
     return {
       value,
@@ -64,24 +68,29 @@ class NumberNode extends Classic.Node implements DataflowNode {
 
 class AddNode extends Classic.Node implements DataflowNode {
   width = 180;
+
   height = 195;
 
   constructor() {
-    super('Add');
+    super("Add");
 
-    this.addInput('a', new Classic.Input(socket, 'A'));
-    this.addInput('b', new Classic.Input(socket, 'B'));
-    this.addOutput('value', new Classic.Output(socket, 'Number'));
+    this.addInput("a", new Classic.Input(socket, "A"));
+    this.addInput("b", new Classic.Input(socket, "B"));
+    this.addOutput("value", new Classic.Output(socket, "Number"));
     this.addControl(
-      'result',
-      new Classic.InputControl('number', { initial: 0, readonly: true })
+      "result",
+      new Classic.InputControl("number", {
+        initial: 0,
+        readonly: true,
+      }),
     );
   }
+
   data(inputs: { a?: number[]; b?: number[] }) {
     const { a = [], b = [] } = inputs;
     const sum = (a[0] || 0) + (b[0] || 0);
 
-    (this.controls['result'] as Classic.InputControl<'number'>).setValue(sum);
+    (this.controls.result as Classic.InputControl<"number">).setValue(sum);
 
     return {
       value: sum,
@@ -96,8 +105,9 @@ type AreaExtra =
   | MinimapExtra
   | RerouteExtra;
 
-const socket = new Classic.Socket('socket');
+const socket = new Classic.Socket("socket");
 
+// eslint-disable-next-line import/prefer-default-export
 export async function createEditor(container: HTMLElement) {
   const editor = new NodeEditor<Schemes>();
   const area = new AreaPlugin<Schemes, AreaExtra>(container);
@@ -107,8 +117,8 @@ export async function createEditor(container: HTMLElement) {
   const readonly = new ReadonlyPlugin<Schemes>();
   const contextMenu = new ContextMenuPlugin<Schemes>({
     items: ContextMenuPresets.classic.setup([
-      ['Number', () => new NumberNode(1, process)],
-      ['Add', () => new AddNode()],
+      ["Number", () => new NumberNode(1, process)],
+      ["Add", () => new AddNode()],
     ]),
   });
   const minimap = new MinimapPlugin<Schemes>();
@@ -138,7 +148,7 @@ export async function createEditor(container: HTMLElement) {
         reroutePlugin.unselect(id);
         reroutePlugin.select(id);
       },
-    })
+    }),
   );
 
   const dataflow = new DataflowEngine<Schemes>();
@@ -153,8 +163,8 @@ export async function createEditor(container: HTMLElement) {
   await editor.addNode(b);
   await editor.addNode(add);
 
-  await editor.addConnection(new Connection(a, 'value', add, 'a'));
-  await editor.addConnection(new Connection(b, 'value', add, 'b'));
+  await editor.addConnection(new Connection(a, "value", add, "a"));
+  await editor.addConnection(new Connection(b, "value", add, "b"));
 
   const arrange = new AutoArrangePlugin<Schemes>();
 
@@ -183,19 +193,19 @@ export async function createEditor(container: HTMLElement) {
       .forEach(async (node) => {
         const sum = await dataflow.fetch(node.id);
 
-        console.log(node.id, 'produces', sum);
+        console.log(node.id, "produces", sum);
 
         area.update(
-          'control',
-          (node.controls['result'] as Classic.InputControl<'number'>).id
+          "control",
+          (node.controls.result as Classic.InputControl<"number">).id,
         );
       });
   }
 
   editor.addPipe((context) => {
     if (
-      context.type === 'connectioncreated' ||
-      context.type === 'connectionremoved'
+      context.type === "connectioncreated" ||
+      context.type === "connectionremoved"
     ) {
       process();
     }
