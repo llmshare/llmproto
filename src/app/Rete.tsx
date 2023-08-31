@@ -4,7 +4,8 @@ import "./rete.css";
 
 import { useRete } from "rete-react-plugin";
 
-import createEditor from "@/rete";
+// import createEditor from "@/rete/randomNumber";
+import createEditor from "@/rete"; // Index import
 
 export default function Rete() {
   const [ref] = useRete(createEditor);

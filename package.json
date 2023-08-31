@@ -16,6 +16,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "rete": "^2.0.2",
+    "rete-area-plugin": "^2.0.0",
     "rete-auto-arrange-plugin": "^2.0.0",
     "rete-connection-plugin": "^2.0.0",
     "rete-connection-reroute-plugin": "^2.0.0",
@@ -24,6 +25,7 @@
     "rete-minimap-plugin": "^2.0.0",
     "rete-react-plugin": "^2.0.1",
     "rete-readonly-plugin": "^2.0.0",
+    "styled-components": "^6.0.7",
     "typescript": "5.2.2"
   },
   "devDependencies": {

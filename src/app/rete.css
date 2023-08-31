@@ -4,8 +4,9 @@
   height: 90vh;
   font-size: 1rem;
   background: white;
-  margin: 1em;
   border-radius: 1em;
   text-align: left;
   border: 3px solid #000000;
+  margin-left: auto;
+  margin-right: auto;
 }
