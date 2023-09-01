@@ -12,88 +12,8 @@ import {
 import { DataflowEngine } from "rete-engine";
 import { Presets, ReactArea2D, ReactPlugin } from "rete-react-plugin";
 
-const socket = new ClassicPreset.Socket("socket");
-
-class OpenAINode extends ClassicPreset.Node<
-  {},
-  { value: ClassicPreset.Socket },
-  { temperature: ClassicPreset.InputControl<"number"> }
-> {
-  height = 120;
-
-  width = 180;
-
-  constructor(temperature: number, change?: () => void) {
-    super("OpenAI");
-    this.addControl(
-      "temperature",
-      new ClassicPreset.InputControl("number", {
-        initial: temperature,
-        change,
-      }),
-    );
-    this.addOutput("value", new ClassicPreset.Output(socket, "OpenAIOutput"));
-  }
-
-  data() {
-    return {
-      value: { temperature: this.controls.temperature.value || 0 },
-    };
-  }
-}
-
-class CodeNode extends ClassicPreset.Node<
-  { openAIInput: ClassicPreset.Socket },
-  { value: ClassicPreset.Socket },
-  { value: ClassicPreset.InputControl<"number"> }
-> {
-  height = 190;
-
-  width = 180;
-
-  constructor(
-    change?: () => void,
-    private update?: (control: ClassicPreset.InputControl<"number">) => void,
-  ) {
-    super("Generated Code");
-
-    const openAIInput = new ClassicPreset.Input(socket, "OpenAIInput");
-
-    openAIInput.addControl(
-      new ClassicPreset.InputControl("number", { initial: 0, change }),
-    );
-
-    this.addInput("openAIInput", openAIInput);
-    this.addControl(
-      "value",
-      new ClassicPreset.InputControl("number", {
-        readonly: true,
-      }),
-    );
-    this.addOutput("value", new ClassicPreset.Output(socket, "Number"));
-  }
-
-  data(inputs: {
-    openAIInput?: {
-      temperature: number;
-    }[];
-  }): { value: number } {
-    const openAIControl = this.inputs.openAIInput
-      ?.control as ClassicPreset.InputControl<"number">;
-
-    const { openAIInput } = inputs;
-    const value = openAIInput
-      ? openAIInput[0].temperature
-      : openAIControl.value || 0;
-    // const value = 0;
-
-    this.controls.value.setValue(value);
-
-    if (this.update) this.update(this.controls.value);
-
-    return { value };
-  }
-}
+import CodeNode from "@/Models/CodeNode/CodeNode";
+import OpenAINode from "@/Models/OpenAI/OpenAI";
 
 class Connection<
   A extends Node,
@@ -101,14 +21,16 @@ class Connection<
 > extends ClassicPreset.Connection<A, B> {}
 
 type Node = OpenAINode | CodeNode;
-type ConnProps =
+type ConnectionProps =
   | Connection<OpenAINode, CodeNode>
   | Connection<CodeNode, CodeNode>;
-type Schemes = GetSchemes<Node, ConnProps>;
+type Schemes = GetSchemes<Node, ConnectionProps>;
 
 type AreaExtra = ReactArea2D<any>;
 
 export default async function createEditor(container: HTMLElement) {
+  const socket = new ClassicPreset.Socket("socket");
+
   const editor = new NodeEditor<Schemes>();
   const area = new AreaPlugin<Schemes, AreaExtra>(container);
   const connection = new ConnectionPlugin<Schemes, AreaExtra>();
@@ -116,13 +38,14 @@ export default async function createEditor(container: HTMLElement) {
   const arrange = new AutoArrangePlugin<Schemes>();
   const engine = new DataflowEngine<Schemes>();
 
+  // function syncs up the data between the nodes
   function process() {
     engine.reset();
 
     editor
       .getNodes()
-      .filter((n) => n instanceof CodeNode)
-      .forEach((n) => engine.fetch(n.id));
+      .filter((node) => node instanceof CodeNode)
+      .forEach((node) => engine.fetch(node.id));
   }
 
   AreaExtensions.selectableNodes(area, AreaExtensions.selector(), {
@@ -137,6 +60,7 @@ export default async function createEditor(container: HTMLElement) {
 
   editor.use(engine);
   editor.use(area);
+
   area.use(connection);
   area.use(render);
   area.use(arrange);
@@ -151,15 +75,22 @@ export default async function createEditor(container: HTMLElement) {
     return context;
   });
 
-  const openAINode = new OpenAINode(1, process);
-  const c = new CodeNode(process, (val) => area.update("control", val.id));
+  const openAINode = new OpenAINode(socket, 0, process);
+  const codeNode = new CodeNode(socket, process, (val) =>
+    area.update("control", val.id),
+  );
 
-  const con2 = new Connection(openAINode, "value", c, "openAIInput");
+  const openAIConnection = new Connection(
+    openAINode,
+    "value",
+    codeNode,
+    "openAIInput",
+  );
 
   await editor.addNode(openAINode);
-  await editor.addNode(c);
+  await editor.addNode(codeNode);
 
-  await editor.addConnection(con2);
+  await editor.addConnection(openAIConnection);
 
   await arrange.layout();
   await AreaExtensions.zoomAt(area, editor.getNodes());

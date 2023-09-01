@@ -1,51 +1,33 @@
-import React from "react";
 import { ClassicPreset } from "rete";
-import { DataflowNode } from "rete-engine";
 
-import { DecimalControl } from "@/Rete/Components/DecimalInput";
+export default class OpenAINode extends ClassicPreset.Node<
+  {},
+  { value: ClassicPreset.Socket },
+  { temperature: ClassicPreset.InputControl<"number"> }
+> {
+  height = 120;
 
-/**
- * OpenAI Model
- */
-export default class OpenAINode
-  extends ClassicPreset.Node<
-    {},
-    { openAI: ClassicPreset.Socket },
-    { temperature: DecimalControl }
-  >
-  implements DataflowNode
-{
-  width = 200;
+  width = 180;
 
-  height = 200;
-
-  private temperature: number;
-
-  constructor(socket: ClassicPreset.Socket, process: () => void) {
+  constructor(
+    socket: ClassicPreset.Socket,
+    temperature: number,
+    change?: () => void,
+  ) {
     super("OpenAI");
-
-    this.temperature = 0;
-
     this.addControl(
       "temperature",
-      new DecimalControl("Temperature", (e) => {
-        let value: number | React.ChangeEvent<HTMLInputElement>;
-
-        if (typeof e === "number") value = e;
-        else value = +e.target.value;
-
-        if (!value || value < 0) return;
-
-        this.temperature = +value;
-        console.log({ temperature: this.temperature });
-
-        process();
+      new ClassicPreset.InputControl("number", {
+        initial: temperature,
+        change,
       }),
     );
-    this.addOutput("openAI", new ClassicPreset.Output(socket));
+    this.addOutput("value", new ClassicPreset.Output(socket, "OpenAIOutput"));
   }
 
-  data(): { openAI: { temperature: number } } {
-    return { openAI: { temperature: this.temperature } };
+  data() {
+    return {
+      value: { temperature: this.controls.temperature.value || 0 },
+    };
   }
 }
