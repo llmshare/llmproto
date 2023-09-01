@@ -26,7 +26,6 @@ export default class OpenAINode
 
     this.temperature = 0;
 
-    this.addOutput("openAI", new ClassicPreset.Output(socket));
     this.addControl(
       "temperature",
       new DecimalControl("Temperature", (e) => {
@@ -39,11 +38,11 @@ export default class OpenAINode
 
         this.temperature = +value;
         console.log({ temperature: this.temperature });
+
         process();
       }),
     );
-
-    console.log({ this: this });
+    this.addOutput("openAI", new ClassicPreset.Output(socket));
   }
 
   data(): { openAI: { temperature: number } } {

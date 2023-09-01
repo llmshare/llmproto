@@ -1,4 +1,5 @@
 import { ClassicPreset } from "rete";
+import { InputControl } from "rete/_types/presets/classic";
 import { DataflowNode } from "rete-engine";
 
 import { DecimalControl } from "@/Rete/Components/DecimalInput";
@@ -18,12 +19,18 @@ export default class CodeNode
   constructor(
     socket: ClassicPreset.Socket,
     change?: () => void,
-    private update?: (control: number) => void,
+    private update?: (control: InputControl<"number">) => void,
   ) {
     super("Generated Code");
 
-    const openAI = new ClassicPreset.Input(socket, "temperature");
-    openAI.addControl(
+    const openAI = new ClassicPreset.Input(socket, "OpenAI");
+
+    const temperature = new ClassicPreset.InputControl("number", {
+      readonly: true,
+    });
+
+    this.addControl(
+      "code",
       new DecimalControl("Temperature", (val) => {
         console.log(val);
       }),
@@ -32,14 +39,12 @@ export default class CodeNode
     this.addInput("openAI", openAI);
     this.addOutput("code", new ClassicPreset.Output(socket, "Code"));
 
-    console.log({ openAI });
+    console.log({ temperature });
     console.log({ input: this.inputs });
   }
 
   // eslint-disable-next-line class-methods-use-this
   data(inputs: { openAI?: { temperature: number }[] }) {
-    console.log({ inputs });
-
     const { openAI } = inputs;
     let value = 0;
     if (openAI) {
@@ -52,7 +57,7 @@ export default class CodeNode
     control?.setValue(value);
 
     if (this.update) {
-      this.update(this.controls.code.value);
+      // this.update(this.controls.code.value);
 
       console.log("Updated control", control);
     }
