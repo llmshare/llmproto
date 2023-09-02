@@ -10,6 +10,18 @@ export default class OpenAI {
   }
 
   set temperature(value: number) {
+    if (value < 0 || this.temperature === value) return;
+
+    // Decimal values
+    // if (
+    //   Math.abs(this.temperature * 10 - value) === 1 ||
+    //   Math.abs(this.temperature - value) === 1
+    // ) {
+    //   console.log("1 diff");
+    //   this._temperature = value / 10;
+    //   return;
+    // }
+
     this._temperature = value;
   }
 }

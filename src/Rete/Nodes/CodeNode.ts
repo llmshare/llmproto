@@ -2,14 +2,15 @@
 
 import { ClassicPreset } from "rete";
 
+// Leaf Node. No inputs, only outputs
 export default class CodeNode extends ClassicPreset.Node<
   { openAIInput: ClassicPreset.Socket },
-  { value: ClassicPreset.Socket },
-  { value: ClassicPreset.InputControl<"number"> }
+  {},
+  { temperature: ClassicPreset.InputControl<"number"> }
 > {
-  height = 190;
+  height = 200;
 
-  width = 180;
+  width = 200;
 
   constructor(
     socket: ClassicPreset.Socket,
@@ -26,12 +27,11 @@ export default class CodeNode extends ClassicPreset.Node<
 
     this.addInput("openAIInput", openAIInput);
     this.addControl(
-      "value",
+      "temperature",
       new ClassicPreset.InputControl("number", {
         readonly: true,
       }),
     );
-    this.addOutput("value", new ClassicPreset.Output(socket, "Number"));
   }
 
   data(inputs: {
@@ -46,11 +46,10 @@ export default class CodeNode extends ClassicPreset.Node<
     const value = openAIInput
       ? openAIInput[0].temperature
       : openAIControl.value || 0;
-    // const value = 0;
 
-    this.controls.value.setValue(value);
+    this.controls.temperature.setValue(value);
 
-    if (this.update) this.update(this.controls.value);
+    if (this.update) this.update(this.controls.temperature);
 
     return { value };
   }

@@ -4,16 +4,17 @@ import { ClassicPreset } from "rete";
 
 import OpenAI from "@/Models/OpenAI";
 
+// Root node. No inputs, only outputs
 export default class OpenAINode extends ClassicPreset.Node<
   {},
   { value: ClassicPreset.Socket },
   { temperature: ClassicPreset.InputControl<"number"> }
 > {
-  height = 120;
-
-  openAI = new OpenAI();
+  height = 180;
 
   width = 180;
+
+  private _openAI: OpenAI;
 
   constructor(
     socket: ClassicPreset.Socket,
@@ -22,13 +23,20 @@ export default class OpenAINode extends ClassicPreset.Node<
   ) {
     super("OpenAI");
 
+    this._openAI = new OpenAI(temperature);
+
     this.addControl(
       "temperature",
       new ClassicPreset.InputControl("number", {
-        initial: temperature,
+        initial: this._openAI.temperature,
         change: (value: number) => {
-          this.openAI.temperature = value;
-          console.log(this.openAI);
+          if (value < 0) {
+            this.controls.temperature.setValue(0);
+            return;
+          }
+
+          this._openAI.temperature = value;
+          console.log({ openAI: this._openAI });
           if (change) change(); // forces UI update
         },
       }),
@@ -36,9 +44,17 @@ export default class OpenAINode extends ClassicPreset.Node<
     this.addOutput("value", new ClassicPreset.Output(socket, "OpenAIOutput"));
   }
 
+  get openAI(): OpenAI {
+    return this._openAI;
+  }
+
+  set openAI(value: OpenAI) {
+    this._openAI = value;
+  }
+
   data() {
     return {
-      value: { temperature: this.openAI.temperature || 0 },
+      value: { temperature: this._openAI.temperature || 0 },
     };
   }
 }
