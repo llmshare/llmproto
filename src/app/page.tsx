@@ -1,9 +1,9 @@
-import Rete from "@/app/Rete";
+import ReteView from "@/app/ReteView";
 
 export default function Home() {
   return (
     <main>
-      <Rete />
+      <ReteView />
     </main>
   );
 }

@@ -1,56 +1,55 @@
 // Controls the view for the Code node
 
 import { ClassicPreset } from "rete";
+import { InputControl } from "rete/_types/presets/classic";
 
-// Leaf Node. No inputs, only outputs
+import Code from "@/Models/Code/Code";
+import { ButtonControl } from "@/Rete/Components/Button";
+
 export default class CodeNode extends ClassicPreset.Node<
-  { openAIInput: ClassicPreset.Socket },
   {},
-  { temperature: ClassicPreset.InputControl<"number"> }
+  {},
+  { generate: ButtonControl; code: InputControl<"text"> }
 > {
   height = 200;
 
   width = 200;
 
+  private _code: Code;
+
   constructor(
     socket: ClassicPreset.Socket,
-    change?: () => void,
-    private update?: (control: ClassicPreset.InputControl<"number">) => void,
+    code: Code,
+    private update: (control: InputControl<"text">) => void,
   ) {
     super("Generated Code");
 
-    const openAIInput = new ClassicPreset.Input(socket, "OpenAIInput");
+    this._code = code;
 
-    openAIInput.addControl(
-      new ClassicPreset.InputControl("number", { initial: 0, change }),
-    );
-
-    this.addInput("openAIInput", openAIInput);
     this.addControl(
-      "temperature",
-      new ClassicPreset.InputControl("number", {
+      "code",
+      new ClassicPreset.InputControl("text", {
+        initial: "",
         readonly: true,
+      }),
+    );
+    this.addControl(
+      "generate",
+      new ButtonControl("Generate", () => {
+        this.controls.code.setValue(this._code.generate());
+
+        update(this.controls.code);
       }),
     );
   }
 
-  data(inputs: {
-    openAIInput?: {
-      temperature: number;
-    }[];
-  }): { value: number } {
-    const openAIControl = this.inputs.openAIInput
-      ?.control as ClassicPreset.InputControl<"number">;
+  //   Getters and Setters
+  //   Code
+  get code(): Code {
+    return this._code;
+  }
 
-    const { openAIInput } = inputs;
-    const value = openAIInput
-      ? openAIInput[0].temperature
-      : openAIControl.value || 0;
-
-    this.controls.temperature.setValue(value);
-
-    if (this.update) this.update(this.controls.temperature);
-
-    return { value };
+  set code(value: Code) {
+    this._code = value;
   }
 }
