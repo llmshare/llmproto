@@ -1,3 +1,5 @@
+// Controls the view for the Code node
+
 import { ClassicPreset } from "rete";
 
 export default class CodeNode extends ClassicPreset.Node<

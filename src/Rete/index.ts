@@ -12,8 +12,8 @@ import {
 import { DataflowEngine } from "rete-engine";
 import { Presets, ReactArea2D, ReactPlugin } from "rete-react-plugin";
 
-import CodeNode from "@/Models/CodeNode/CodeNode";
-import OpenAINode from "@/Models/OpenAI/OpenAI";
+import CodeNode from "@/Rete/Nodes/CodeNode";
+import OpenAINode from "@/Rete/Nodes/OpenAINode";
 
 class Connection<
   A extends Node,

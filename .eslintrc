@@ -6,7 +6,8 @@
 		"simple-import-sort/exports": "error",
 		"prettier/prettier": ["error"],
 		"react/react-in-jsx-scope": "off",
-		"import/extensions": "off"
+		"import/extensions": "off",
+		"no-underscore-dangle": "off"
 	},
 	"parserOptions": {
 	   "project": "./tsconfig.json"
