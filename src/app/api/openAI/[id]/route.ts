@@ -27,5 +27,5 @@ export async function POST(
     .set({ temperature })
     .where(eq(openAI.id, context.params.id));
 
-  return NextResponse.json({ temperature });
+  return NextResponse.json({ message: "success" });
 }
