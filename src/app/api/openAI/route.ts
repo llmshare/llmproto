@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-import db from "@/app/db/database";
-import { openAI } from "@/app/db/schema";
+import db from "@/db/database";
+import { openAI } from "@/db/schema";
 
 // create an OpenAI model and store it
 export async function POST() {

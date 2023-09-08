@@ -3,7 +3,7 @@
 import { ClassicPreset } from "rete";
 import { InputControl } from "rete/_types/presets/classic";
 
-import Code from "@/Models/Code/Code";
+import Code from "@/models/Code/Code";
 import { ButtonControl } from "@/Rete/Components/Button";
 
 export default class CodeNode extends ClassicPreset.Node<

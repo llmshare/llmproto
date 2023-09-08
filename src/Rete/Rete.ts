@@ -11,7 +11,7 @@ import {
 } from "rete-connection-plugin";
 import { Presets, ReactArea2D, ReactPlugin } from "rete-react-plugin";
 
-import { getOpenAI } from "@/app/controllers/openAI";
+import { getOpenAI } from "@/controllers/openAI";
 import Button, { ButtonControl } from "@/Rete/Components/Button";
 // import CodeNode from "@/Rete/Nodes/CodeNode";
 import OpenAINode from "@/Rete/Nodes/OpenAINode";

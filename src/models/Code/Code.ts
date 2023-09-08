@@ -1,4 +1,4 @@
-import OpenAI from "@/Models/OpenAI/OpenAI";
+import OpenAI from "@/models/OpenAI/OpenAI";
 
 export default class Code {
   private _openAI: OpenAI;
