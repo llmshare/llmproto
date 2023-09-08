@@ -22,6 +22,7 @@ export default class OpenAI {
     this._initialTemperature = value;
   }
 
+  // unable to use currently
   async getTemperature(): Promise<number> {
     return axios(`/api/openAI/${this._id}`).then((res) => {
       const { temperature } = res.data;

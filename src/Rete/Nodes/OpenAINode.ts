@@ -15,7 +15,7 @@ export default class OpenAINode extends ClassicPreset.Node<
 
   private _openAI: OpenAI;
 
-  constructor(socket: ClassicPreset.Socket, openAI: OpenAI) {
+  constructor(openAI: OpenAI) {
     super("OpenAI");
 
     this._openAI = openAI;
@@ -33,7 +33,6 @@ export default class OpenAINode extends ClassicPreset.Node<
           }
 
           await this.openAI.setTemperature(value);
-          console.log({ openAI: this.openAI });
         },
       }),
     );

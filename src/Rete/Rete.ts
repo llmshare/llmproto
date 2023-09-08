@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import { ClassicPreset, GetSchemes, NodeEditor } from "rete";
+import { GetSchemes, NodeEditor } from "rete";
 import { AreaExtensions, AreaPlugin } from "rete-area-plugin";
 import {
   AutoArrangePlugin,
@@ -11,8 +11,11 @@ import {
 } from "rete-connection-plugin";
 import { Presets, ReactArea2D, ReactPlugin } from "rete-react-plugin";
 
+import { getChain } from "@/controllers/chain";
 import { getOpenAI } from "@/controllers/openAI";
 import Button, { ButtonControl } from "@/Rete/Components/Button";
+import Dropdown, { DropdownControl } from "@/Rete/Components/Dropdown";
+import ChainNode from "@/Rete/Nodes/ChainNode";
 // import CodeNode from "@/Rete/Nodes/CodeNode";
 import OpenAINode from "@/Rete/Nodes/OpenAINode";
 
@@ -24,7 +27,7 @@ type AreaExtra = ReactArea2D<any>;
 export default async function createEditor(container: HTMLElement) {
   const openAI = await getOpenAI(10);
 
-  const socket = new ClassicPreset.Socket("socket");
+  const chain = await getChain(1);
 
   const editor = new NodeEditor<Schemes>();
   const area = new AreaPlugin<Schemes, AreaExtra>(container);
@@ -42,6 +45,10 @@ export default async function createEditor(container: HTMLElement) {
         control(data) {
           if (data.payload instanceof ButtonControl) {
             return Button;
+          }
+
+          if (data.payload instanceof DropdownControl) {
+            return Dropdown;
           }
 
           return Presets.classic.Control;
@@ -63,9 +70,11 @@ export default async function createEditor(container: HTMLElement) {
   AreaExtensions.simpleNodesOrder(area);
   AreaExtensions.showInputControl(area);
 
-  const openAINode = new OpenAINode(socket, openAI);
+  const openAINode = new OpenAINode(openAI);
+  const chainNode = new ChainNode(chain);
 
   await editor.addNode(openAINode);
+  await editor.addNode(chainNode);
 
   await arrange.layout();
   await AreaExtensions.zoomAt(area, editor.getNodes());

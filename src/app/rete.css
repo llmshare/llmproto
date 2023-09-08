@@ -1,7 +1,7 @@
 .rete {
   position: relative;
   width: 80vw;
-  height: 90vh;
+  height: 60vh;
   font-size: 1rem;
   background: white;
   border-radius: 1em;
@@ -9,4 +9,5 @@
   border: 3px solid #000000;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 2rem;
 }
