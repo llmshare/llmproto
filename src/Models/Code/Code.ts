@@ -22,7 +22,7 @@ import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import * as fs from "fs";
 
 const text = fs.readFileSync("state_of_the_union.txt", "utf8");
-const model = new OpenAI({ temperature: ${this._openAI.temperature} }); // --> Updating temperature based on OpenAI node
+const model = new OpenAI({ temperature: ${this._openAI.id} }); // --> Updating temperature based on OpenAI node
 const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000 });
 const docs = await textSplitter.createDocuments([text]);
 

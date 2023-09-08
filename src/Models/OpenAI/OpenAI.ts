@@ -1,27 +1,39 @@
 export default class OpenAI {
-  private _temperature: number;
+  private readonly _id: number;
 
-  constructor(temperature: number = 0) {
-    this._temperature = temperature;
+  private _initialTemperature: number;
+
+  constructor(id: number) {
+    this._id = id;
+    this._initialTemperature = 0;
   }
 
-  get temperature(): number {
-    return this._temperature;
+  get id(): number {
+    return this._id;
   }
 
-  set temperature(value: number) {
-    if (value < 0 || this.temperature === value) return;
+  get initialTemperature(): number {
+    return this._initialTemperature;
+  }
 
-    // Decimal values
-    // if (
-    //   Math.abs(this.temperature * 10 - value) === 1 ||
-    //   Math.abs(this.temperature - value) === 1
-    // ) {
-    //   console.log("1 diff");
-    //   this._temperature = value / 10;
-    //   return;
-    // }
+  set initialTemperature(value) {
+    this._initialTemperature = value;
+  }
 
-    this._temperature = value;
+  async getTemperature(): Promise<number> {
+    return fetch(`/api/openAI/${this._id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const { temperature } = data;
+
+        return temperature;
+      });
+  }
+
+  async setTemperature(value: number) {
+    await fetch(`/api/openAI/${this._id}`, {
+      method: "POST",
+      body: JSON.stringify({ temperature: value }),
+    });
   }
 }

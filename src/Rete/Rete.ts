@@ -11,10 +11,9 @@ import {
 } from "rete-connection-plugin";
 import { Presets, ReactArea2D, ReactPlugin } from "rete-react-plugin";
 
-import Code from "@/Models/Code/Code";
-import OpenAI from "@/Models/OpenAI/OpenAI";
+import { getOpenAI } from "@/app/controllers/openAI";
 import Button, { ButtonControl } from "@/Rete/Components/Button";
-import CodeNode from "@/Rete/Nodes/CodeNode";
+// import CodeNode from "@/Rete/Nodes/CodeNode";
 import OpenAINode from "@/Rete/Nodes/OpenAINode";
 
 // type Node = OpenAINode | CodeNode;
@@ -22,11 +21,9 @@ type Schemes = GetSchemes<any, any>; // TODO: Need to fix the Schemes type. It n
 
 type AreaExtra = ReactArea2D<any>;
 
-// Instantiate the models (this will be done based on the models user will select, for now we will instantiate by default)
-const openAI = new OpenAI();
-const code = new Code(openAI);
-
 export default async function createEditor(container: HTMLElement) {
+  const openAI = await getOpenAI(10);
+
   const socket = new ClassicPreset.Socket("socket");
 
   const editor = new NodeEditor<Schemes>();
@@ -67,12 +64,8 @@ export default async function createEditor(container: HTMLElement) {
   AreaExtensions.showInputControl(area);
 
   const openAINode = new OpenAINode(socket, openAI);
-  const codeNode = new CodeNode(socket, code, (val) =>
-    area.update("control", val.id),
-  );
 
   await editor.addNode(openAINode);
-  await editor.addNode(codeNode);
 
   await arrange.layout();
   await AreaExtensions.zoomAt(area, editor.getNodes());
@@ -81,5 +74,3 @@ export default async function createEditor(container: HTMLElement) {
     destroy: () => area.destroy(),
   };
 }
-
-export { code, openAI };
