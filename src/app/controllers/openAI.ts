@@ -1,12 +1,13 @@
+import axios from "axios";
+
 import OpenAI from "@/Models/OpenAI/OpenAI";
 
 export const createOpenAI = async () => {
-  const response = await fetch("/api/openAI", {
+  const res = await axios("/api/openAI", {
     method: "POST",
   });
-  const data = await response.json();
 
-  const { id } = data;
+  const { id } = res.data;
 
   return new OpenAI(id);
 };
@@ -14,13 +15,11 @@ export const createOpenAI = async () => {
 export const getOpenAI = async (id: number) => {
   const openAI = new OpenAI(id);
 
-  openAI.initialTemperature = await fetch(`/api/openAI/${id}`)
-    .then((res) => res.json())
-    .then((data) => {
-      const { temperature } = data;
+  const res = await axios(`/api/openAI/${id}`);
 
-      return temperature;
-    });
+  const { temperature } = res.data;
+
+  openAI.initialTemperature = temperature;
 
   return openAI;
 };

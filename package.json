@@ -9,13 +9,14 @@
     "lint": "next lint",
     "generate:db": "drizzle-kit generate:sqlite",
     "push:db": "drizzle-kit push:sqlite",
-    "migrate:db" : "npm run generate:db && npm run push:db",
+    "migrate:db": "npm run generate:db && npm run push:db",
     "studio:db": "drizzle-kit studio --verbose"
   },
   "dependencies": {
     "@types/node": "20.5.7",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
+    "axios": "^1.5.0",
     "better-sqlite3": "^8.6.0",
     "drizzle-orm": "^0.28.6",
     "next": "13.4.19",

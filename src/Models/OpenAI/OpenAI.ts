@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export default class OpenAI {
   private readonly _id: number;
 
@@ -21,19 +23,17 @@ export default class OpenAI {
   }
 
   async getTemperature(): Promise<number> {
-    return fetch(`/api/openAI/${this._id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        const { temperature } = data;
+    return axios(`/api/openAI/${this._id}`).then((res) => {
+      const { temperature } = res.data;
 
-        return temperature;
-      });
+      return temperature;
+    });
   }
 
   async setTemperature(value: number) {
-    await fetch(`/api/openAI/${this._id}`, {
+    await axios(`/api/openAI/${this._id}`, {
       method: "POST",
-      body: JSON.stringify({ temperature: value }),
+      data: { temperature: value },
     });
   }
 }
