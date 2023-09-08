@@ -6,12 +6,18 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate:db": "drizzle-kit generate:sqlite",
+    "push:db": "drizzle-kit push:sqlite",
+    "migrate:db" : "npm run generate:db && npm run push:db",
+    "studio:db": "drizzle-kit studio --verbose"
   },
   "dependencies": {
     "@types/node": "20.5.7",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
+    "better-sqlite3": "^8.6.0",
+    "drizzle-orm": "^0.28.6",
     "next": "13.4.19",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -25,8 +31,10 @@
     "typescript": "5.2.2"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.4",
     "@typescript-eslint/eslint-plugin": "^6.5.0",
     "@typescript-eslint/parser": "^6.5.0",
+    "drizzle-kit": "^0.19.13",
     "eslint": "^8.48.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.1.0",
