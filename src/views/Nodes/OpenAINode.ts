@@ -1,8 +1,8 @@
-// Controls the view for the OpenAI node
+// View for the OpenAI node
 
 import { ClassicPreset } from "rete";
 
-import OpenAI from "@/models/OpenAI/OpenAI";
+import OpenAI from "@/models/BaseLLM/OpenAI";
 
 export default class OpenAINode extends ClassicPreset.Node<
   {},

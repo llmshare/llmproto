@@ -1,6 +1,11 @@
 import axios from "axios";
 
-export default class Chain {
+// export const loadSummarizationChain = (
+//  llm: BaseLanguageModel,
+//  params: SummarizationChainParams = { type: "map_reduce" }
+// )
+
+export default class LoadSummarizationChain {
   private readonly _id: number;
 
   private _initialType: string;

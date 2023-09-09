@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import Chain from "@/models/Chain/Chain";
+import LoadSummarizationChain from "@/models/Chains/LoadSummarizationChain";
 
 export const createChain = async () => {
   const res = await axios("/api/chain", {
@@ -9,11 +9,11 @@ export const createChain = async () => {
 
   const { id } = res.data;
 
-  return new Chain(id);
+  return new LoadSummarizationChain(id);
 };
 
 export const getChain = async (id: number) => {
-  const chain = new Chain(id);
+  const chain = new LoadSummarizationChain(id);
 
   const res = await axios(`/api/chain/${id}`);
 

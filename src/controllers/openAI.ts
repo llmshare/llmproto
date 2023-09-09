@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import OpenAI from "@/models/OpenAI/OpenAI";
+import OpenAI from "@/models/BaseLLM/OpenAI";
 
 export const createOpenAI = async () => {
   const res = await axios("/api/openAI", {

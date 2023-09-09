@@ -6,7 +6,7 @@ import "./rete.css";
 
 import { useRete } from "rete-react-plugin";
 
-import createEditor from "@/Rete/Rete";
+import createEditor from "@/views/Page/CodePage";
 
 export default function ReteView() {
   const [ref] = useRete(createEditor);

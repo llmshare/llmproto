@@ -1,7 +1,14 @@
 import axios from "axios";
 
-export default class OpenAI {
-  private readonly _id: number;
+
+//export class RecursiveCharacterTextSplitter
+//  extends TextSplitter
+//  implements RecursiveCharacterTextSplitterParams
+//{
+
+
+export default class RecursiveCharacterTextSplitter {
+    private readonly _id: number;
 
   private _initialTemperature: number;
 

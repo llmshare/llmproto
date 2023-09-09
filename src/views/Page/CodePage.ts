@@ -13,11 +13,11 @@ import { Presets, ReactArea2D, ReactPlugin } from "rete-react-plugin";
 
 import { getChain } from "@/controllers/chain";
 import { getOpenAI } from "@/controllers/openAI";
-import Button, { ButtonControl } from "@/Rete/Components/Button";
-import Dropdown, { DropdownControl } from "@/Rete/Components/Dropdown";
-import ChainNode from "@/Rete/Nodes/ChainNode";
+import Button, { ButtonControl } from "@/views/Components/Button";
+import Dropdown, { DropdownControl } from "@/views/Components/Dropdown";
+import ChainNode from "@/views/Nodes/LoadSummarizationChainNode";
 // import CodeNode from "@/Rete/Nodes/CodeNode";
-import OpenAINode from "@/Rete/Nodes/OpenAINode";
+import OpenAINode from "@/views/Nodes/OpenAINode";
 
 // type Node = OpenAINode | CodeNode;
 type Schemes = GetSchemes<any, any>; // TODO: Need to fix the Schemes type. It needs to hold the right Node type for giving better context in plugin configuration. WORKS FINE FOR NOW.
