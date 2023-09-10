@@ -22,7 +22,14 @@ export const getChain = async (id: number) => {
   const { type, returnIntermediateSteps } = res.data;
 
   chain.initialType = type;
-  chain.returnIntermediateSteps = returnIntermediateSteps;
+  chain.initialReturnIntermediateSteps = returnIntermediateSteps;
 
   return chain;
+};
+
+export const setType = async (id: number, type: string) => {
+  await axios(`/api/chain/${id}`, {
+    method: "POST",
+    data: { type },
+  });
 };

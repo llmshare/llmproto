@@ -4,7 +4,7 @@ import { ClassicPreset } from "rete";
 
 import OpenAI from "@/models/TextSplitters/RecursiveCharacterTextSplitter";
 
-export default class RecursizeCharacterTextSplitterNode extends ClassicPreset.Node<
+export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.Node<
   {},
   {},
   { temperature: ClassicPreset.InputControl<"number"> }
