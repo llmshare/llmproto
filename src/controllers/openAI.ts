@@ -23,3 +23,10 @@ export const getOpenAI = async (id: number) => {
 
   return openAI;
 };
+
+export const setTemperature = async (id: number, temperature: number) => {
+  await axios(`/api/openAI/${id}`, {
+    method: "POST",
+    data: { temperature },
+  });
+};

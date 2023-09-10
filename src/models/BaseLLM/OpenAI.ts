@@ -1,9 +1,10 @@
 import axios from "axios";
 
-//export class OpenAI
-//extends BaseLLM<OpenAICallOptions>
-// implements OpenAIInput, AzureOpenAIInput
+import { setTemperature } from "@/controllers/openAI";
 
+// export class OpenAI
+// extends BaseLLM<OpenAICallOptions>
+// implements OpenAIInput, AzureOpenAIInput
 
 export default class OpenAI {
   private readonly _id: number;
@@ -29,7 +30,7 @@ export default class OpenAI {
 
   // unable to use currently
   async getTemperature(): Promise<number> {
-    return axios(`/api/openAI/${this._id}`).then((res) => {
+    return axios(`/api/openAI/${this.id}`).then((res) => {
       const { temperature } = res.data;
 
       return temperature;
@@ -37,9 +38,6 @@ export default class OpenAI {
   }
 
   async setTemperature(value: number) {
-    await axios(`/api/openAI/${this._id}`, {
-      method: "POST",
-      data: { temperature: value },
-    });
+    await setTemperature(this.id, value);
   }
 }
