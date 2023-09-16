@@ -27,7 +27,7 @@ export const getChain = async (id: number) => {
   return chain;
 };
 
-export const setType = async (id: number, type: string) => {
+export const setTypeOnDB = async (id: number, type: string) => {
   await axios(`/api/chain/${id}`, {
     method: "POST",
     data: { type },

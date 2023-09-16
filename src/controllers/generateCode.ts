@@ -27,8 +27,7 @@ const chain = loadSummarizationChain(model, {
 });
 const res = await chain.call({
   input_documents: docs,
-});
-console.log({ res });`;
+});`;
 };
 
 export default generateCode;

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { setType } from "@/controllers/chain";
+import { setTypeOnDB } from "@/controllers/chain";
 
 // export const loadSummarizationChain = (
 //  llm: BaseLanguageModel,
@@ -41,7 +41,7 @@ export default class LoadSummarizationChain {
   }
 
   async setType(value: string) {
-    setType(this.id, value);
+    await setTypeOnDB(this.id, value);
   }
 
   async setReturnIntermediateSteps(value: boolean) {

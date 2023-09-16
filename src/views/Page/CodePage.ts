@@ -12,6 +12,7 @@ import {
 import { Presets, ReactArea2D, ReactPlugin } from "rete-react-plugin";
 
 import { getChain } from "@/controllers/chain";
+import { getNewCode } from "@/controllers/new-code";
 import { getOpenAI } from "@/controllers/openAI";
 import Button, { ButtonControl } from "@/views/Components/Button";
 import Dropdown, { DropdownControl } from "@/views/Components/Dropdown";
@@ -25,6 +26,8 @@ type Schemes = GetSchemes<any, any>; // TODO: Need to fix the Schemes type. It n
 type AreaExtra = ReactArea2D<any>;
 
 export default async function createEditor(container: HTMLElement) {
+  const newCode = await getNewCode();
+  console.log({ newCode });
   const openAI = await getOpenAI(10);
 
   const chain = await getChain(1);
