@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import db from "@/db/database";
 import { openAI } from "@/db/schema";
+import { readFile, writeFile } from "@/db/utils";
 
 // create an OpenAI model and store it
 export async function GET(
@@ -20,12 +21,12 @@ export async function POST(
   request: NextRequest,
   context: { params: { id: number } },
 ) {
+  const { id } = context.params;
   const { temperature } = await request.json();
 
-  await db
-    .update(openAI)
-    .set({ temperature })
-    .where(eq(openAI.id, context.params.id));
+  const parsedFile = await readFile(id);
+  const data = { ...parsedFile, llm: { ...parsedFile.llm, temperature } };
+  await writeFile(id, data);
 
   return NextResponse.json({ message: "success" });
 }
