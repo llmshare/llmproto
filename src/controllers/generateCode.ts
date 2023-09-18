@@ -1,7 +1,10 @@
 import axios from "axios";
 
 const createLangchain = async (data: any) => {
-  await axios.post("/api/new-chain", data);
+  const res = await axios.post("/api/langchain", data);
+  const { id } = res.data;
+
+  return id;
 };
 
 const generateCode = async () =>

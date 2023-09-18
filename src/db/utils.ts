@@ -4,24 +4,23 @@ import path from "path";
 
 import db from "@/db/db";
 
-export async function post(data: any) {
-  const structured = { ...data, id: 1 };
-  try {
-    await fs.writeFile(path.join(db, "1.json"), JSON.stringify(structured), {
-      flag: "w",
-    });
-  } catch (err) {
-    console.log(err);
-  }
+export async function readFile(id: number) {
+  const file = await fs.readFile(path.join(db, `${id}.json`), "utf-8");
+  return JSON.parse(file);
 }
 
-export async function get() {
-  try {
-    const file = await fs.readFile(path.join(db, "1.json"), "utf-8");
+export async function writeFile(id: number, data: any) {
+  await fs.writeFile(path.join(db, `${id}.json`), JSON.stringify(data), {
+    flag: "w+",
+  });
+}
 
-    return JSON.parse(file);
+export async function post(data: any) {
+  const id = 1;
+  const structured = { ...data, id };
+  try {
+    await writeFile(id, structured);
   } catch (err) {
     console.log(err);
-    return err;
   }
 }

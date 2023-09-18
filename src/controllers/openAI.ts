@@ -2,17 +2,13 @@ import axios from "axios";
 
 import OpenAI from "@/models/BaseLLM/OpenAI";
 
-export const createOpenAI = async () => {
-  const res = await axios("/api/openAI", {
-    method: "POST",
-  });
-
-  const { id } = res.data;
+export const createOpenAIModel = async (id: number) => {
+  await axios.post(`/api/langchain/${id}/llm`);
 
   return new OpenAI(id);
 };
 
-export const getOpenAI = async (id: number) => {
+export const getModel = async (id: number) => {
   const openAI = new OpenAI(id);
 
   const res = await axios(`/api/openAI/${id}`);

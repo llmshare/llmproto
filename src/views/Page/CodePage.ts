@@ -13,7 +13,7 @@ import { Presets, ReactArea2D, ReactPlugin } from "rete-react-plugin";
 
 import { getChain } from "@/controllers/chain";
 import { createLangchain } from "@/controllers/generateCode";
-import { getOpenAI } from "@/controllers/openAI";
+import { createOpenAIModel } from "@/controllers/openAI";
 import Button, { ButtonControl } from "@/views/Components/Button";
 import Dropdown, { DropdownControl } from "@/views/Components/Dropdown";
 import ChainNode from "@/views/Nodes/LoadSummarizationChainNode";
@@ -28,7 +28,7 @@ type AreaExtra = ReactArea2D<any>;
 export default async function createEditor(container: HTMLElement) {
   await createLangchain({ type: "loadSummarizationChain" });
 
-  const openAI = await getOpenAI(10);
+  const openAI = await createOpenAIModel(1);
 
   const chain = await getChain(1);
 
