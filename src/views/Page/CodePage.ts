@@ -26,10 +26,10 @@ type Schemes = GetSchemes<any, any>; // TODO: Need to fix the Schemes type. It n
 type AreaExtra = ReactArea2D<any>;
 
 export default async function createEditor(container: HTMLElement) {
-  await createLangchain({ name: "summarization" });
+  const id = await createLangchain({ name: "summarization" });
 
-  const openAI = await createLLMModel(1);
-  const chain = await createChain(1);
+  const openAI = await createLLMModel(id);
+  const chain = await createChain(id);
 
   const editor = new NodeEditor<Schemes>();
   const area = new AreaPlugin<Schemes, AreaExtra>(container);

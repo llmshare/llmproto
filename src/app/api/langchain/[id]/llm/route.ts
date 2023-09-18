@@ -4,7 +4,7 @@ import { readFile, writeFile } from "@/db/utils";
 
 export async function POST(
   request: NextRequest,
-  context: { params: { id: number } },
+  context: { params: { id: string } },
 ) {
   const { id } = context.params;
 
