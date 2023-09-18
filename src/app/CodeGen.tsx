@@ -8,8 +8,7 @@ function CodeGen() {
 
   const handleCodeGeneration = async () => {
     const response = await axios.post("/api/generateCode", {
-      openAIID: 10,
-      chainID: 1,
+      id: "data",
     });
 
     setCode(response.data.code);
@@ -17,9 +16,7 @@ function CodeGen() {
 
   return (
     <>
-      {/* <textarea name="" id="" cols={70} rows={15} value={code} readOnly> */}
-      {code}
-      {/* </textarea> */}
+      <textarea cols={70} rows={15} value={code} readOnly />
       <button type="button" onClick={handleCodeGeneration}>
         Generate Code
       </button>
