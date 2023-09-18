@@ -17,9 +17,9 @@ function CodeGen() {
 
   return (
     <>
-      <textarea name="" id="" cols={70} rows={15} value={code} readOnly>
-        {code}
-      </textarea>
+      {/* <textarea name="" id="" cols={70} rows={15} value={code} readOnly> */}
+      {code}
+      {/* </textarea> */}
       <button type="button" onClick={handleCodeGeneration}>
         Generate Code
       </button>
