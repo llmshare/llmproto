@@ -163,4 +163,4 @@ drizzle
 next-env.d.ts
 
 # JSON DB
-data
+data/*.json

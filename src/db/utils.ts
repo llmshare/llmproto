@@ -11,14 +11,13 @@ export async function post(data: any) {
       flag: "w",
     });
   } catch (err) {
-    console.log("this is effed");
     console.log(err);
   }
 }
 
 export async function get() {
   try {
-    const file = await fs.readFile(`${path.join(db, "1.json")}`, "utf-8");
+    const file = await fs.readFile(path.join(db, "1.json"), "utf-8");
 
     return JSON.parse(file);
   } catch (err) {
