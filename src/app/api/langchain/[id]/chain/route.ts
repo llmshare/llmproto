@@ -9,7 +9,14 @@ export async function POST(
   const { id } = context.params;
 
   const parsedFile = await readFile(id);
-  const data = { ...parsedFile, llm: { name: "OpenAI", temperature: 0 } };
+  const data = {
+    ...parsedFile,
+    chain: {
+      name: "loadSummarizationChain",
+      returnIntermediateSteps: false,
+      type: "map_reduce",
+    },
+  };
   await writeFile(id, data);
 
   return NextResponse.json({ success: true });

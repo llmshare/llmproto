@@ -2,9 +2,9 @@ import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 import db from "@/db/database";
-import { chain, openAI } from "@/db/schema";
+import { chain } from "@/db/schema";
+import { readFile, writeFile } from "@/db/utils";
 
-// create an OpenAI model and store it
 export async function GET(
   request: NextRequest,
   context: { params: { id: number } },
@@ -23,16 +23,17 @@ export async function POST(
   request: NextRequest,
   context: { params: { id: number } },
 ) {
+  const { id } = context.params;
   const { type, returnIntermediateSteps } = await request.json();
 
-  if (type)
-    await db.update(chain).set({ type }).where(eq(chain.id, context.params.id));
+  const parsedFile = await readFile(id);
+
+  if (type) parsedFile.chain.type = type;
 
   if (returnIntermediateSteps)
-    await db
-      .update(chain)
-      .set({ returnIntermediateSteps })
-      .where(eq(chain.id, context.params.id));
+    parsedFile.chain.returnIntermediateSteps = returnIntermediateSteps;
+
+  await writeFile(id, parsedFile);
 
   return NextResponse.json({ message: "success" });
 }

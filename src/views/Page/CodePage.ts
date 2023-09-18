@@ -11,9 +11,9 @@ import {
 } from "rete-connection-plugin";
 import { Presets, ReactArea2D, ReactPlugin } from "rete-react-plugin";
 
-import { getChain } from "@/controllers/chain";
+import { createChain } from "@/controllers/chain";
 import { createLangchain } from "@/controllers/generateCode";
-import { createOpenAIModel } from "@/controllers/openAI";
+import { createLLMModel } from "@/controllers/openAI";
 import Button, { ButtonControl } from "@/views/Components/Button";
 import Dropdown, { DropdownControl } from "@/views/Components/Dropdown";
 import ChainNode from "@/views/Nodes/LoadSummarizationChainNode";
@@ -26,11 +26,10 @@ type Schemes = GetSchemes<any, any>; // TODO: Need to fix the Schemes type. It n
 type AreaExtra = ReactArea2D<any>;
 
 export default async function createEditor(container: HTMLElement) {
-  await createLangchain({ type: "loadSummarizationChain" });
+  await createLangchain({ name: "summarization" });
 
-  const openAI = await createOpenAIModel(1);
-
-  const chain = await getChain(1);
+  const openAI = await createLLMModel(1);
+  const chain = await createChain(1);
 
   const editor = new NodeEditor<Schemes>();
   const area = new AreaPlugin<Schemes, AreaExtra>(container);
