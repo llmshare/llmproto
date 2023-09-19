@@ -11,8 +11,7 @@ function generateLLM(llm: { temperature: number; name: string }) {
   const importStatement = `import { ${
     llm.name
   } } from "langchain/llms/${llm.name.toLowerCase()}";`;
-  const code = `// This convenience function creates a document chain prompted to summarize a set of documents.
-  const chain = new ${llm.name}({ temperature: ${llm.temperature} });`;
+  const code = `const chain = new ${llm.name}({ temperature: ${llm.temperature} });`;
   return { importStatement, code };
 }
 
@@ -32,19 +31,8 @@ function generateLoadSummarizationChain(
   type: ${chain.type},
   returnIntermediateSteps: ${chain.returnIntermediateSteps},
 });`;
-  return { importStatement, code };
+
+  return `${importStatement}\n\n${code}`;
 }
 
-const generateCode = async (
-  chain: { type: string; returnIntermediateSteps: boolean; name: string },
-  llm: { temperature: number; name: string },
-) => {
-  const { importStatement, code } = generateLoadSummarizationChain(chain, llm);
-
-  return `${importStatement}\n\n${code}
-  `;
-};
-
-export default generateCode;
-
-export { createLangchain };
+export { createLangchain, generateLoadSummarizationChain };
