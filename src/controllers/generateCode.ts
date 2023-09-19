@@ -7,26 +7,37 @@ const createLangchain = async (data: any) => {
   return id;
 };
 
-const generateCode = async (
-  chain: { type: string; returnIntermediateSteps: boolean },
-  llm: { temperature: number },
-) => `import { OpenAI } from "langchain/llms/openai";
-import { loadSummarizationChain } from "langchain/chains";
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import * as fs from "fs";
+function generateLLM(llm: { temperature: number; name: string }) {
+  const importStatement = `import { ${
+    llm.name
+  } } from "langchain/llms/${llm.name.toLowerCase()}";`;
+  const code = `// This convenience function creates a document chain prompted to summarize a set of documents.
+  const chain = new ${llm.name}({ temperature: ${llm.temperature} });`;
+  return { importStatement, code };
+}
 
-const text = fs.readFileSync("state_of_the_union.txt", "utf8");
-const model = new OpenAI({ temperature: ${llm.temperature}); // --> Updating temperature based on OpenAI node
-const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000 });
-const docs = await textSplitter.createDocuments([text]);
-
-const chain = loadSummarizationChain(model, {
-  type: ${chain.type}, // --> Updating type based on Chain node
-  returnIntermediateSteps: ${chain.returnIntermediateSteps}},
-});
-const res = await chain.call({
-  input_documents: docs,
+function generateLoadSummarizationChain(chain: {
+  type: string;
+  returnIntermediateSteps: boolean;
+  name: string;
+}) {
+  const importStatement = `import { ${chain.name} } from "langchain/chains";`;
+  const code = `// This convenience function creates a document chain prompted to summarize a set of documents.
+  const chain = ${chain.name}(model, {
+  type: ${chain.type},
+  returnIntermediateSteps: ${chain.returnIntermediateSteps},
 });`;
+  return { importStatement, code };
+}
+
+const generateCode = async (
+  chain: { type: string; returnIntermediateSteps: boolean; name: string },
+  llm: { temperature: number; name: string },
+) => {
+  generateLoadSummarizationChain(chain);
+  generateLLM(llm);
+};
+
 export default generateCode;
 
 export { createLangchain };
