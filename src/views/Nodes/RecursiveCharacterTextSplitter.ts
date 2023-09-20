@@ -1,48 +1,48 @@
-// Controls the view for the OpenAI node
+// View for the OpenAI node
 
 import { ClassicPreset } from "rete";
 
-import OpenAI from "@/models/TextSplitters/RecursiveCharacterTextSplitter";
+import RecursiveCharacterTextSplitter from "@/models/TextSplitters/RecursiveCharacterTextSplitter";
 
 export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.Node<
   {},
   {},
-  { temperature: ClassicPreset.InputControl<"number"> }
+  { chunkSize: ClassicPreset.InputControl<"number"> }
 > {
   height = 180;
 
-  width = 180;
+  width = 280;
 
-  private _TextSplitter: OpenAI;
+  private _recursiveCharacterTextSplitter: RecursiveCharacterTextSplitter;
 
-  constructor(openAI: OpenAI) {
-    super("OpenAI");
+  constructor(recursiveCharacterTextSplitter: RecursiveCharacterTextSplitter) {
+    super("RecursiveCharacterTextSplitter");
 
-    this._TextSplitter = openAI;
-
-    console.log({ initialTemperature: this._TextSplitter.initialTemperature });
+    this._recursiveCharacterTextSplitter = recursiveCharacterTextSplitter;
 
     this.addControl(
-      "temperature",
+      "chunkSize",
       new ClassicPreset.InputControl("number", {
-        initial: this.openAI.initialTemperature,
+        initial: 1000,
         change: async (value: number) => {
           if (value < 0) {
-            this.controls.temperature.setValue(0);
+            this.controls.chunkSize.setValue(0);
             return;
           }
 
-          await this.openAI.setTemperature(value);
+          await this.recursiveCharacterTextSplitter.setRecursiveCharacterTextSplitter(
+            value,
+          );
         },
       }),
     );
   }
 
-  get openAI(): OpenAI {
-    return this._TextSplitter;
+  get recursiveCharacterTextSplitter(): RecursiveCharacterTextSplitter {
+    return this._recursiveCharacterTextSplitter;
   }
 
-  set openAI(value: OpenAI) {
-    this._TextSplitter = value;
+  set recursiveCharacterTextSplitter(value: RecursiveCharacterTextSplitter) {
+    this._recursiveCharacterTextSplitter = value;
   }
 }

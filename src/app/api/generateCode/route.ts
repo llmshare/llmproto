@@ -7,9 +7,9 @@ export async function POST(request: NextRequest) {
   const { id } = await request.json();
 
   const parsedFile = await readFile(id);
-  const { chain, llm } = parsedFile;
+  const { chain, llm, textSplitter } = parsedFile;
 
-  const code = generateLoadSummarizationChain(chain, llm);
+  const code = generateLoadSummarizationChain(chain, llm, textSplitter);
 
   return NextResponse.json({ code });
 }
