@@ -41,7 +41,7 @@ export default class LoadSummarizationChain {
   }
 
   async setType(value: string) {
-    setType(this.id, value);
+    await setType(this.id, value);
   }
 
   async setReturnIntermediateSteps(value: boolean) {

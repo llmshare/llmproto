@@ -15,6 +15,7 @@ import { createChain } from "@/controllers/chain";
 import { createLangchain } from "@/controllers/generateCode";
 import { createLLMModel } from "@/controllers/openAI";
 import Button, { ButtonControl } from "@/views/Components/Button";
+import Checkbox, { CheckboxControl } from "@/views/Components/Checkbox";
 import Dropdown, { DropdownControl } from "@/views/Components/Dropdown";
 import ChainNode from "@/views/Nodes/LoadSummarizationChainNode";
 // import CodeNode from "@/Rete/Nodes/CodeNode";
@@ -51,6 +52,10 @@ export default async function createEditor(container: HTMLElement) {
 
           if (data.payload instanceof DropdownControl) {
             return Dropdown;
+          }
+
+          if (data.payload instanceof CheckboxControl) {
+            return Checkbox;
           }
 
           return Presets.classic.Control;
