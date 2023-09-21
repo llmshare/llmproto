@@ -4,7 +4,7 @@ import { readFile } from "@/db/utils";
 
 export async function GET(
   request: NextRequest,
-  context: { params: { id: number } },
+  context: { params: { id: string } },
 ) {
   const { id } = context.params;
   const parsedFile = await readFile(id);

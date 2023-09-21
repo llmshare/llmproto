@@ -13,8 +13,6 @@ export const getChain = async (id: number) => {
 
   const res = await axios(`/api/chain/${id}`);
 
-  console.log({ data: res.data });
-
   const { type, returnIntermediateSteps } = res.data;
 
   chain.initialType = type;

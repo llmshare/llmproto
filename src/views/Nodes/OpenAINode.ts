@@ -20,8 +20,6 @@ export default class OpenAINode extends ClassicPreset.Node<
 
     this._openAI = openAI;
 
-    console.log({ initialTemperature: this.openAI.initialTemperature });
-
     this.addControl(
       "temperature",
       new ClassicPreset.InputControl("number", {

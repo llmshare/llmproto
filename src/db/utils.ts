@@ -20,6 +20,7 @@ export async function post(id: string, data: any) {
   try {
     await writeFile(id, structured);
   } catch (err) {
-    console.log(err);
+    // eslint-disable-next-line no-console
+    console.error(err);
   }
 }

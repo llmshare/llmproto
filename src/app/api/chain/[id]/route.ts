@@ -13,8 +13,6 @@ export async function POST(
   const { id } = context.params;
   const { type, returnIntermediateSteps } = await request.json();
 
-  console.log({ type, returnIntermediateSteps });
-
   const parsedFile = await readFile(id);
 
   if (type) parsedFile.chain.type = type;
