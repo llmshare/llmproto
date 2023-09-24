@@ -6,7 +6,7 @@ import OpenAI from "@/models/BaseLLM/OpenAI";
 
 export default class OpenAINode extends ClassicPreset.Node<
   {},
-  {},
+  { output: ClassicPreset.Socket },
   { temperature: ClassicPreset.InputControl<"number"> }
 > {
   height = 180;
@@ -15,7 +15,7 @@ export default class OpenAINode extends ClassicPreset.Node<
 
   private _openAI: OpenAI;
 
-  constructor(openAI: OpenAI) {
+  constructor(openAI: OpenAI, socket: ClassicPreset.Socket) {
     super("OpenAI");
 
     this._openAI = openAI;
@@ -34,6 +34,8 @@ export default class OpenAINode extends ClassicPreset.Node<
         },
       }),
     );
+
+    this.addOutput("output", new ClassicPreset.Output(socket, "Output"));
   }
 
   get openAI(): OpenAI {

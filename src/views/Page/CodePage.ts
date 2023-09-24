@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import { GetSchemes, NodeEditor } from "rete";
+import { ClassicPreset, GetSchemes, NodeEditor } from "rete";
 import { AreaExtensions, AreaPlugin } from "rete-area-plugin";
 import {
   ConnectionPlugin,
@@ -31,6 +31,7 @@ type AreaExtra = ReactArea2D<any> | ContextMenuExtra;
 export default async function createEditor(container: HTMLElement) {
   const editor = new NodeEditor<Schemes>();
   const area = new AreaPlugin<Schemes, AreaExtra>(container);
+  const socket = new ClassicPreset.Socket("socket");
   const connection = new ConnectionPlugin<Schemes, AreaExtra>();
   const render = new ReactPlugin<Schemes, AreaExtra>({ createRoot });
 
@@ -40,23 +41,45 @@ export default async function createEditor(container: HTMLElement) {
 
   const id = await createLangchain({ name: "summarization" });
 
-  const openAI = await createLLMModel(id);
-  const chain = await createChain(id);
-  const recursiveCharacterTextSplitter = await createTextSplitter(id);
-
   const contextMenu = new ContextMenuPlugin<Schemes>({
     items: ContextMenuPresets.classic.setup([
-      ["LLM", [["OpenAI", () => new OpenAINode(openAI)]]],
-      ["Chain", [["Summarization", () => new ChainNode(chain)]]],
+      [
+        "LLM",
+        [
+          [
+            "OpenAI",
+            async () => {
+              const openAI = await createLLMModel(id);
+              return new OpenAINode(openAI, socket);
+            },
+          ],
+        ],
+      ],
+      [
+        "Chain",
+        [
+          [
+            "Summarization",
+            async () => {
+              const chain = await createChain(id);
+              return new ChainNode(chain);
+            },
+          ],
+        ],
+      ],
       [
         "Text Splitter",
         [
           [
             "Recursive",
-            () =>
-              new RecursiveCharacterTextSplitterNode(
+            async () => {
+              const recursiveCharacterTextSplitter =
+                await createTextSplitter(id);
+              return new RecursiveCharacterTextSplitterNode(
                 recursiveCharacterTextSplitter,
-              ),
+                socket,
+              );
+            },
           ],
         ],
       ],

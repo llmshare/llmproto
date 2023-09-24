@@ -6,7 +6,7 @@ import RecursiveCharacterTextSplitter from "@/models/TextSplitters/RecursiveChar
 
 export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.Node<
   {},
-  {},
+  { output: ClassicPreset.Socket },
   { chunkSize: ClassicPreset.InputControl<"number"> }
 > {
   height = 180;
@@ -15,7 +15,10 @@ export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.No
 
   private _recursiveCharacterTextSplitter: RecursiveCharacterTextSplitter;
 
-  constructor(recursiveCharacterTextSplitter: RecursiveCharacterTextSplitter) {
+  constructor(
+    recursiveCharacterTextSplitter: RecursiveCharacterTextSplitter,
+    socket: ClassicPreset.Socket,
+  ) {
     super("RecursiveCharacterTextSplitter");
 
     this._recursiveCharacterTextSplitter = recursiveCharacterTextSplitter;
@@ -36,6 +39,8 @@ export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.No
         },
       }),
     );
+
+    this.addOutput("output", new ClassicPreset.Output(socket, "Output"));
   }
 
   get recursiveCharacterTextSplitter(): RecursiveCharacterTextSplitter {

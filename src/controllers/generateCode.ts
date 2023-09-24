@@ -23,7 +23,7 @@ function generateTextSplitter(textSplitter: {
 import * as fs from "fs";`;
 
   const code = `const text = fs.readFileSync("state_of_the_union.txt", "utf8");
-const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000 });
+const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: ${textSplitter.chunkSize} });
 const docs = await textSplitter.createDocuments([text]);`;
 
   return { importStatement, code };
