@@ -12,7 +12,7 @@ import { CheckboxControl } from "@/views/Components/Checkbox";
 import { DropdownControl } from "@/views/Components/Dropdown";
 
 export default class LoadSummarizationChainNode extends ClassicPreset.Node<
-  {},
+  { inputs: ClassicPreset.Socket },
   {},
   { type: DropdownControl; returnIntermediateSteps: CheckboxControl }
 > {
@@ -22,7 +22,7 @@ export default class LoadSummarizationChainNode extends ClassicPreset.Node<
 
   private _chain: LoadSummarizationChain;
 
-  constructor(chain: LoadSummarizationChain) {
+  constructor(chain: LoadSummarizationChain, socket: ClassicPreset.Socket) {
     super("Chain");
 
     this._chain = chain;
@@ -49,5 +49,7 @@ export default class LoadSummarizationChainNode extends ClassicPreset.Node<
         },
       ),
     );
+
+    this.addInput("inputs", new ClassicPreset.Input(socket, "Inputs"));
   }
 }

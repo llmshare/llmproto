@@ -62,7 +62,7 @@ export default async function createEditor(container: HTMLElement) {
             "Summarization",
             async () => {
               const chain = await createChain(id);
-              return new ChainNode(chain);
+              return new ChainNode(chain, socket);
             },
           ],
         ],
