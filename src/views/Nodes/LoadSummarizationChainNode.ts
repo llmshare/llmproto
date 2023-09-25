@@ -50,6 +50,6 @@ export default class LoadSummarizationChainNode extends ClassicPreset.Node<
       ),
     );
 
-    this.addInput("inputs", new ClassicPreset.Input(socket, "Inputs"));
+    this.addInput("inputs", new ClassicPreset.Input(socket, "Inputs", true));
   }
 }
