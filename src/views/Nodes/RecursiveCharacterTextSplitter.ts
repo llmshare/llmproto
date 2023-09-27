@@ -25,7 +25,7 @@ export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.No
     this.addControl(
       "chunkSize",
       new LabelledInputControl(
-        "Chunk Size",
+        "chunk size",
         1000,
         async (value) => {
           const num = Number(value);

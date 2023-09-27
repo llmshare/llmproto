@@ -12,7 +12,7 @@ export default class OpenAINode extends ClassicPreset.Node<
 > {
   height = 180;
 
-  width = 180;
+  width = 280;
 
   private _openAI: OpenAI;
 
@@ -24,7 +24,7 @@ export default class OpenAINode extends ClassicPreset.Node<
     this.addControl(
       "temperature",
       new LabelledInputControl(
-        "Temperature",
+        "temperature",
         openAI.initialTemperature,
         async (value) => {
           const num = Number(value);

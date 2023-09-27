@@ -13,7 +13,7 @@ export default class LoadSummarizationChainNode extends ClassicPreset.Node<
 > {
   height = 200;
 
-  width = 250;
+  width = 280;
 
   private _chain: LoadSummarizationChain;
 
