@@ -19,6 +19,9 @@ import { createTextSplitter } from "@/controllers/textSplitter";
 import Button, { ButtonControl } from "@/views/Components/Button";
 import Checkbox, { CheckboxControl } from "@/views/Components/Checkbox";
 import Dropdown, { DropdownControl } from "@/views/Components/Dropdown";
+import LabelledInput, {
+  LabelledInputControl,
+} from "@/views/Components/LabelledInput";
 import ChainNode from "@/views/Nodes/LoadSummarizationChainNode";
 import OpenAINode from "@/views/Nodes/OpenAINode";
 import RecursiveCharacterTextSplitterNode from "@/views/Nodes/RecursiveCharacterTextSplitter";
@@ -92,6 +95,10 @@ export default async function createEditor(container: HTMLElement) {
     Presets.classic.setup({
       customize: {
         control(data) {
+          if (data.payload instanceof LabelledInputControl) {
+            return LabelledInput;
+          }
+
           if (data.payload instanceof ButtonControl) {
             return Button;
           }

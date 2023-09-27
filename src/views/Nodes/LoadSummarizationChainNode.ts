@@ -1,10 +1,5 @@
 //  view for the loadSummarizationChain node
 
-// export const loadSummarizationChain = (
-//  llm: BaseLanguageModel,
-//  params: SummarizationChainParams = { type: "map_reduce" }
-// )
-
 import { ClassicPreset } from "rete";
 
 import LoadSummarizationChain from "@/models/Chains/LoadSummarizationChain";

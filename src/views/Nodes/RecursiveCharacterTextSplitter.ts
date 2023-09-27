@@ -1,13 +1,12 @@
-// View for the OpenAI node
-
 import { ClassicPreset } from "rete";
 
 import RecursiveCharacterTextSplitter from "@/models/TextSplitters/RecursiveCharacterTextSplitter";
+import { LabelledInputControl } from "@/views/Components/LabelledInput";
 
 export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.Node<
   {},
   { output: ClassicPreset.Socket },
-  { chunkSize: ClassicPreset.InputControl<"number"> }
+  { chunkSize: LabelledInputControl }
 > {
   height = 180;
 
@@ -25,22 +24,23 @@ export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.No
 
     this.addControl(
       "chunkSize",
-      new ClassicPreset.InputControl("number", {
-        initial: 1000,
-        change: async (value: number) => {
-          if (value < 0) {
-            this.controls.chunkSize.setValue(0);
-            return;
-          }
+      new LabelledInputControl(
+        "Chunk Size",
+        1000,
+        async (value) => {
+          const num = Number(value);
+
+          if (num < 0) return;
 
           await this.recursiveCharacterTextSplitter.setRecursiveCharacterTextSplitter(
-            value,
+            num,
           );
         },
-      }),
+        "number",
+      ),
     );
 
-    this.addOutput("output", new ClassicPreset.Output(socket, "Output"));
+    this.addOutput("output", new ClassicPreset.Output(socket));
   }
 
   get recursiveCharacterTextSplitter(): RecursiveCharacterTextSplitter {

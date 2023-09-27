@@ -3,11 +3,12 @@
 import { ClassicPreset } from "rete";
 
 import OpenAI from "@/models/BaseLLM/OpenAI";
+import { LabelledInputControl } from "@/views/Components/LabelledInput";
 
 export default class OpenAINode extends ClassicPreset.Node<
   {},
   { output: ClassicPreset.Socket },
-  { temperature: ClassicPreset.InputControl<"number"> }
+  { temperature: LabelledInputControl }
 > {
   height = 180;
 
@@ -22,20 +23,21 @@ export default class OpenAINode extends ClassicPreset.Node<
 
     this.addControl(
       "temperature",
-      new ClassicPreset.InputControl("number", {
-        initial: this.openAI.initialTemperature,
-        change: async (value: number) => {
-          if (value < 0) {
-            this.controls.temperature.setValue(0);
-            return;
-          }
+      new LabelledInputControl(
+        "Temperature",
+        openAI.initialTemperature,
+        async (value) => {
+          const num = Number(value);
 
-          await this.openAI.setTemperature(value);
+          if (num < 0) return;
+
+          await this.openAI.setTemperature(num);
         },
-      }),
+        "number",
+      ),
     );
 
-    this.addOutput("output", new ClassicPreset.Output(socket, "Output"));
+    this.addOutput("output", new ClassicPreset.Output(socket));
   }
 
   get openAI(): OpenAI {
