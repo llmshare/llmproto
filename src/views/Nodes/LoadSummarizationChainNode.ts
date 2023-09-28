@@ -18,7 +18,7 @@ export default class LoadSummarizationChainNode extends ClassicPreset.Node<
   private _chain: LoadSummarizationChain;
 
   constructor(chain: LoadSummarizationChain) {
-    super("Chain");
+    super("LoadSummarizationChain");
 
     this._chain = chain;
 
