@@ -7,16 +7,16 @@ import { setTemperature } from "@/controllers/openAI";
 // implements OpenAIInput, AzureOpenAIInput
 
 export default class OpenAI {
-  private readonly _id: number;
+  private readonly _id: string;
 
   private _initialTemperature: number;
 
-  constructor(id: number) {
+  constructor(id: string) {
     this._id = id;
     this._initialTemperature = 0;
   }
 
-  get id(): number {
+  get id(): string {
     return this._id;
   }
 

@@ -11,5 +11,11 @@ import createEditor from "@/views/Page/CodePage";
 export default function ReteView() {
   const [ref] = useRete(createEditor);
 
-  return <div ref={ref} className="rete" />;
+  return (
+    <div
+      ref={ref}
+      className="rete"
+      style={{ height: "90vh", marginTop: "1rem" }}
+    />
+  );
 }

@@ -1,47 +1,19 @@
 import axios from "axios";
 
-
-//export class RecursiveCharacterTextSplitter
-//  extends TextSplitter
-//  implements RecursiveCharacterTextSplitterParams
-//{
-
-
 export default class RecursiveCharacterTextSplitter {
-    private readonly _id: number;
+  private readonly _id: string;
 
-  private _initialTemperature: number;
-
-  constructor(id: number) {
+  constructor(id: string) {
     this._id = id;
-    this._initialTemperature = 0;
   }
 
-  get id(): number {
+  get id(): string {
     return this._id;
   }
 
-  get initialTemperature(): number {
-    return this._initialTemperature;
-  }
-
-  set initialTemperature(value) {
-    this._initialTemperature = value;
-  }
-
-  // unable to use currently
-  async getTemperature(): Promise<number> {
-    return axios(`/api/openAI/${this._id}`).then((res) => {
-      const { temperature } = res.data;
-
-      return temperature;
-    });
-  }
-
-  async setTemperature(value: number) {
-    await axios(`/api/openAI/${this._id}`, {
-      method: "POST",
-      data: { temperature: value },
+  async setRecursiveCharacterTextSplitter(value: number) {
+    await axios.post(`/api/textSplitter/${this._id}`, {
+      chunkSize: value,
     });
   }
 }

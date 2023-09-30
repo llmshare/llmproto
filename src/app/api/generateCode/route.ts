@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import generateCode from "@/controllers/generateCode";
+import { generateLoadSummarizationChain } from "@/controllers/generateCode";
+import { readFile } from "@/db/utils";
 
 export async function POST(request: NextRequest) {
-  const { openAIID, chainID } = await request.json();
+  const { id } = await request.json();
 
-  const code = await generateCode(openAIID, chainID);
+  const parsedFile = await readFile(id);
+  const { chain, llm, textSplitter } = parsedFile;
+
+  const code = generateLoadSummarizationChain(chain, llm, textSplitter);
 
   return NextResponse.json({ code });
 }

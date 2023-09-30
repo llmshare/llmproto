@@ -1,34 +1,61 @@
-import { eq } from "drizzle-orm";
+import axios from "axios";
 
-import db from "@/db/database";
-import { chain, openAI } from "@/db/schema";
+const createLangchain = async (data: any) => {
+  const res = await axios.post("/api/langchain", data);
+  const { id } = res.data;
 
-const generateCode = async (openAI_ID: number, chainID: number) => {
-  const openAIItem = await db
-    .select()
-    .from(openAI)
-    .where(eq(openAI.id, openAI_ID));
+  return id;
+};
 
-  const chainItem = await db.select().from(chain).where(eq(chain.id, chainID));
+function generateLLM(llm: { temperature: number; name: string }) {
+  const importStatement = `import { ${
+    llm.name
+  } } from "langchain/llms/${llm.name.toLowerCase()}";`;
+  const code = `const chain = new ${llm.name}({ temperature: ${llm.temperature} });`;
+  return { importStatement, code };
+}
 
-  return `import { OpenAI } from "langchain/llms/openai";
-import { loadSummarizationChain } from "langchain/chains";
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import * as fs from "fs";
+function generateTextSplitter(textSplitter: {
+  name: string;
+  chunkSize: number;
+}) {
+  const importStatement = `import { ${textSplitter.name} } from "langchain/text_splitter";
+import * as fs from "fs";`;
 
-const text = fs.readFileSync("state_of_the_union.txt", "utf8");
-const model = new OpenAI({ temperature: ${openAIItem[0].temperature} }); // --> Updating temperature based on OpenAI node
-const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000 });
-const docs = await textSplitter.createDocuments([text]);
+  const code = `const text = fs.readFileSync("state_of_the_union.txt", "utf8");
+const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: ${textSplitter.chunkSize} });
+const docs = await textSplitter.createDocuments([text]);`;
 
-const chain = loadSummarizationChain(model, {
-  type: ${chainItem[0].type}, // --> Updating type based on Chain node
-  returnIntermediateSteps: true,
-});
+  return { importStatement, code };
+}
+
+function generateLoadSummarizationChain(
+  chain: {
+    type: string;
+    returnIntermediateSteps: boolean;
+    name: string;
+  },
+  llm: { temperature: number; name: string },
+  textSplitter: { chunkSize: number; name: string },
+) {
+  const { importStatement: LLMImport, code: LLMCode } = generateLLM(llm);
+
+  const { importStatement: textSplitterImport, code: textSplitterCode } =
+    generateTextSplitter(textSplitter);
+
+  const importStatement = `${LLMImport}\nimport { ${chain.name} } from "langchain/chains";\n${textSplitterImport}`;
+  const code = `${LLMCode}\n// This convenience function creates a document chain prompted to summarize a set of documents.
+  const chain = ${chain.name}(model, {
+  type: ${chain.type},
+  returnIntermediateSteps: ${chain.returnIntermediateSteps},
+});\n
+${textSplitterCode}\n
 const res = await chain.call({
   input_documents: docs,
 });
 console.log({ res });`;
-};
 
-export default generateCode;
+  return `${importStatement}\n\n${code}`;
+}
+
+export { createLangchain, generateLoadSummarizationChain };

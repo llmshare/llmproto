@@ -2,31 +2,22 @@ import axios from "axios";
 
 import OpenAI from "@/models/BaseLLM/OpenAI";
 
-export const createOpenAI = async () => {
-  const res = await axios("/api/openAI", {
-    method: "POST",
-  });
-
-  const { id } = res.data;
+export const createLLMModel = async (id: string) => {
+  await axios.post(`/api/langchain/${id}/llm`);
 
   return new OpenAI(id);
 };
 
-export const getOpenAI = async (id: number) => {
-  const openAI = new OpenAI(id);
-
+export const getModel = async (id: string) => {
   const res = await axios(`/api/openAI/${id}`);
+  const { llm } = res.data;
 
-  const { temperature } = res.data;
-
-  openAI.initialTemperature = temperature;
+  const openAI = new OpenAI(id);
+  openAI.initialTemperature = llm.temperature;
 
   return openAI;
 };
 
-export const setTemperature = async (id: number, temperature: number) => {
-  await axios(`/api/openAI/${id}`, {
-    method: "POST",
-    data: { temperature },
-  });
+export const setTemperature = async (id: string, temperature: number) => {
+  await axios.post(`/api/openAI/${id}`, { temperature });
 };

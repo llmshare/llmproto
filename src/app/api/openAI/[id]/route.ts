@@ -1,31 +1,27 @@
-import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
-import db from "@/db/database";
-import { openAI } from "@/db/schema";
+import { readFile, writeFile } from "@/db/utils";
 
-// create an OpenAI model and store it
 export async function GET(
   request: NextRequest,
-  context: { params: { id: number } },
+  context: { params: { id: string } },
 ) {
-  const data = await db
-    .select()
-    .from(openAI)
-    .where(eq(openAI.id, context.params.id));
-  return NextResponse.json({ temperature: data[0].temperature });
+  const { id } = context.params;
+
+  const parsedFile = await readFile(id);
+  return NextResponse.json({ llm: parsedFile.llm });
 }
 
 export async function POST(
   request: NextRequest,
-  context: { params: { id: number } },
+  context: { params: { id: string } },
 ) {
+  const { id } = context.params;
   const { temperature } = await request.json();
 
-  await db
-    .update(openAI)
-    .set({ temperature })
-    .where(eq(openAI.id, context.params.id));
+  const parsedFile = await readFile(id);
+  parsedFile.llm.temperature = temperature;
+  await writeFile(id, parsedFile);
 
   return NextResponse.json({ message: "success" });
 }

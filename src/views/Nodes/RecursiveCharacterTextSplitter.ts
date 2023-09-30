@@ -1,48 +1,53 @@
-// Controls the view for the OpenAI node
-
 import { ClassicPreset } from "rete";
 
-import OpenAI from "@/models/TextSplitters/RecursiveCharacterTextSplitter";
+import RecursiveCharacterTextSplitter from "@/models/TextSplitters/RecursiveCharacterTextSplitter";
+import { LabelledInputControl } from "@/views/Components/LabelledInput";
 
 export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.Node<
   {},
-  {},
-  { temperature: ClassicPreset.InputControl<"number"> }
+  { output: ClassicPreset.Socket },
+  { chunkSize: LabelledInputControl }
 > {
   height = 180;
 
-  width = 180;
+  width = 280;
 
-  private _TextSplitter: OpenAI;
+  private _recursiveCharacterTextSplitter: RecursiveCharacterTextSplitter;
 
-  constructor(openAI: OpenAI) {
-    super("OpenAI");
+  constructor(
+    recursiveCharacterTextSplitter: RecursiveCharacterTextSplitter,
+    socket: ClassicPreset.Socket,
+  ) {
+    super("RecursiveCharacterTextSplitter");
 
-    this._TextSplitter = openAI;
-
-    console.log({ initialTemperature: this._TextSplitter.initialTemperature });
+    this._recursiveCharacterTextSplitter = recursiveCharacterTextSplitter;
 
     this.addControl(
-      "temperature",
-      new ClassicPreset.InputControl("number", {
-        initial: this.openAI.initialTemperature,
-        change: async (value: number) => {
-          if (value < 0) {
-            this.controls.temperature.setValue(0);
-            return;
-          }
+      "chunkSize",
+      new LabelledInputControl(
+        "chunk size",
+        1000,
+        async (value) => {
+          const num = Number(value);
 
-          await this.openAI.setTemperature(value);
+          if (num < 0) return;
+
+          await this.recursiveCharacterTextSplitter.setRecursiveCharacterTextSplitter(
+            num,
+          );
         },
-      }),
+        "number",
+      ),
     );
+
+    this.addOutput("output", new ClassicPreset.Output(socket));
   }
 
-  get openAI(): OpenAI {
-    return this._TextSplitter;
+  get recursiveCharacterTextSplitter(): RecursiveCharacterTextSplitter {
+    return this._recursiveCharacterTextSplitter;
   }
 
-  set openAI(value: OpenAI) {
-    this._TextSplitter = value;
+  set recursiveCharacterTextSplitter(value: RecursiveCharacterTextSplitter) {
+    this._recursiveCharacterTextSplitter = value;
   }
 }
