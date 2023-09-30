@@ -44,4 +44,8 @@ export default class OpenAI {
   async setBatchSize(value: number) {
     await updateField(this.id, "batchSize", value);
   }
+
+  async setModelName(value: string) {
+    await updateField(this.id, "modelName", value);
+  }
 }
