@@ -8,7 +8,7 @@ import { LabelledInputControl } from "@/views/Components/LabelledInput";
 export default class OpenAINode extends ClassicPreset.Node<
   {},
   { output: ClassicPreset.Socket },
-  { temperature: LabelledInputControl }
+  { temperature: LabelledInputControl; batchSize: LabelledInputControl }
 > {
   height = 180;
 
@@ -32,6 +32,22 @@ export default class OpenAINode extends ClassicPreset.Node<
           if (num < 0) return;
 
           await this.openAI.setTemperature(num);
+        },
+        "number",
+      ),
+    );
+
+    this.addControl(
+      "batchSize",
+      new LabelledInputControl(
+        "batch size",
+        openAI.initialTemperature,
+        async (value) => {
+          const num = Number(value);
+
+          if (num < 0) return;
+
+          await this.openAI.setBatchSize(num);
         },
         "number",
       ),

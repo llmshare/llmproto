@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { setTemperature } from "@/controllers/openAI";
+import { updateField } from "@/controllers/openAI";
 
 // export class OpenAI
 // extends BaseLLM<OpenAICallOptions>
@@ -38,6 +38,10 @@ export default class OpenAI {
   }
 
   async setTemperature(value: number) {
-    await setTemperature(this.id, value);
+    await updateField(this.id, "temperature", value);
+  }
+
+  async setBatchSize(value: number) {
+    await updateField(this.id, "batchSize", value);
   }
 }
