@@ -3,6 +3,8 @@ import axios from "axios";
 type LLM = {
   instanceName?: string;
   temperature: number;
+  batchSize?: number;
+  modelName?: string;
   name: string;
 };
 
@@ -37,9 +39,11 @@ function generateLLM(llm: LLM): GeneratedCode {
   const importStatement = `import { ${
     llm.name
   } } from "langchain/llms/${llm.name.toLowerCase()}";`;
-  const code = `const ${llm?.instanceName || "llm"} = new ${
-    llm.name
-  }({ temperature: ${llm.temperature} });`;
+  const code = `const ${llm?.instanceName || "llm"} = new ${llm.name}({ 
+  temperature: ${llm.temperature}, 
+  ${llm?.batchSize ? `batchSize: ${llm.batchSize},` : ""}
+  ${llm?.modelName ? `modelName: ${llm.modelName}` : ""}
+  );`;
   return { importStatement, code };
 }
 
