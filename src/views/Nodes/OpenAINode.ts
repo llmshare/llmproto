@@ -9,14 +9,15 @@ export default class OpenAINode extends ClassicPreset.Node<
   {},
   { output: ClassicPreset.Socket },
   {
+    instanceName: LabelledInputControl;
     temperature: LabelledInputControl;
     batchSize: LabelledInputControl;
     modelName: LabelledInputControl;
   }
 > {
-  height = 180;
+  height = 280;
 
-  width = 280;
+  width = 380;
 
   private _openAI: OpenAI;
 
@@ -24,6 +25,22 @@ export default class OpenAINode extends ClassicPreset.Node<
     super("OpenAI");
 
     this._openAI = openAI;
+
+    this.addControl(
+      "instanceName",
+      new LabelledInputControl(
+        "instance name",
+        "",
+        async (value) => {
+          const str = String(value);
+
+          if (!str) return;
+
+          await this.openAI.setInstanceName(str);
+        },
+        "text",
+      ),
+    );
 
     this.addControl(
       "temperature",

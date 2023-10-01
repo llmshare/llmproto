@@ -37,6 +37,10 @@ export default class OpenAI {
     });
   }
 
+  async setInstanceName(value: string) {
+    await updateField(this.id, "instanceName", value);
+  }
+
   async setTemperature(value: number) {
     await updateField(this.id, "temperature", value);
   }
