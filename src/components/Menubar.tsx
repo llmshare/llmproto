@@ -1,4 +1,4 @@
-import CodeGen from "@/app/CodeGen";
+import CodeGen from "@/components/CodeGen";
 
 function Menubar() {
   return (
