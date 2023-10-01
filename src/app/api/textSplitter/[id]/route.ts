@@ -7,10 +7,10 @@ export async function POST(
   context: { params: { id: string } },
 ) {
   const { id } = context.params;
-  const { chunkSize } = await request.json();
+  const { type, value } = await request.json();
 
   const parsedFile = await readFile(id);
-  parsedFile.textSplitter.chunkSize = chunkSize;
+  parsedFile.textSplitter[type] = value;
   await writeFile(id, parsedFile);
 
   return NextResponse.json({ message: "success" });

@@ -2,10 +2,6 @@ import axios from "axios";
 
 import { updateField } from "@/controllers/openAI";
 
-// export class OpenAI
-// extends BaseLLM<OpenAICallOptions>
-// implements OpenAIInput, AzureOpenAIInput
-
 export default class OpenAI {
   private readonly _id: string;
 

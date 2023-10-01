@@ -24,7 +24,7 @@ import LabelledInput, {
 } from "@/views/Components/LabelledInput";
 import ChainNode from "@/views/Nodes/LoadSummarizationChainNode";
 import OpenAINode from "@/views/Nodes/OpenAINode";
-import RecursiveCharacterTextSplitterNode from "@/views/Nodes/RecursiveCharacterTextSplitter";
+import RecursiveCharacterTextSplitterNode from "@/views/Nodes/RecursiveCharacterTextSplitterNode";
 
 // type Node = OpenAINode | CodeNode;
 type Schemes = GetSchemes<any, any>; // TODO: Need to fix the Schemes type. It needs to hold the right Node type for giving better context in plugin configuration. WORKS FINE FOR NOW.
