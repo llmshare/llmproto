@@ -39,7 +39,11 @@ function CodeGen() {
     <>
       {/* Enable the textarea during dev to preview generated code */}
       {/* <textarea cols={70} rows={15} value={code} readOnly /> */}
-      <button type="button" onClick={handleCodeGeneration}>
+      <button
+        type="button"
+        onClick={handleCodeGeneration}
+        className="bg-amber-700 p-2 rounded-full"
+      >
         Generate Code
       </button>
     </>
