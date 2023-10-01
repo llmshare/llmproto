@@ -11,15 +11,10 @@ export async function POST(
   context: { params: { id: string } },
 ) {
   const { id } = context.params;
-  const { type, returnIntermediateSteps } = await request.json();
+  const { type, value } = await request.json();
 
   const parsedFile = await readFile(id);
-
-  if (type) parsedFile.chain.type = type;
-
-  if (typeof returnIntermediateSteps === "boolean")
-    parsedFile.chain.returnIntermediateSteps = returnIntermediateSteps;
-
+  parsedFile.chain[type] = value;
   await writeFile(id, parsedFile);
 
   return NextResponse.json({ message: "success" });
