@@ -15,7 +15,7 @@ export default function ReteView() {
     <div
       ref={ref}
       className="rete"
-      style={{ height: "90vh", marginTop: "1rem" }}
+      style={{ height: "80vh", marginTop: "2rem" }}
     />
   );
 }

@@ -13,7 +13,15 @@ export default class RecursiveCharacterTextSplitter {
 
   async setRecursiveCharacterTextSplitter(value: number) {
     await axios.post(`/api/textSplitter/${this._id}`, {
-      chunkSize: value,
+      type: "chunkSize",
+      value,
+    });
+  }
+
+  async setInstanceName(value: string) {
+    await axios.post(`/api/textSplitter/${this._id}`, {
+      type: "instanceName",
+      value,
     });
   }
 }

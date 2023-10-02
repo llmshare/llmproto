@@ -1,10 +1,6 @@
 import axios from "axios";
 
-import { setTemperature } from "@/controllers/openAI";
-
-// export class OpenAI
-// extends BaseLLM<OpenAICallOptions>
-// implements OpenAIInput, AzureOpenAIInput
+import { updateField } from "@/controllers/openAI";
 
 export default class OpenAI {
   private readonly _id: string;
@@ -37,7 +33,19 @@ export default class OpenAI {
     });
   }
 
+  async setInstanceName(value: string) {
+    await updateField(this.id, "instanceName", value);
+  }
+
   async setTemperature(value: number) {
-    await setTemperature(this.id, value);
+    await updateField(this.id, "temperature", value);
+  }
+
+  async setBatchSize(value: number) {
+    await updateField(this.id, "batchSize", value);
+  }
+
+  async setModelName(value: string) {
+    await updateField(this.id, "modelName", value);
   }
 }
