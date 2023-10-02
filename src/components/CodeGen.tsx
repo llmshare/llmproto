@@ -10,9 +10,8 @@ function CodeGen() {
       id: "data",
     });
 
-    // setCode(generatedCode);
-
     const generatedCode = response.data.code;
+    // setCode(generatedCode);
 
     // download the generated code as a file
     const blob = new Blob([generatedCode], { type: "text/plain" });
@@ -39,11 +38,7 @@ function CodeGen() {
     <>
       {/* Enable the textarea during dev to preview generated code */}
       {/* <textarea cols={70} rows={15} value={code} readOnly className="text-black"/> */}
-      <button
-        type="button"
-        onClick={handleCodeGeneration}
-        className="bg-amber-700 p-2 rounded-full"
-      >
+      <button type="button" onClick={handleCodeGeneration}>
         Generate Code
       </button>
     </>
