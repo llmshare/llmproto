@@ -2,7 +2,7 @@
 
 import axios from "axios";
 
-function CodeGen() {
+function CodeMenu() {
   // const [code, setCode] = useState("");
 
   const handleCodeGeneration = async () => {
@@ -45,4 +45,4 @@ function CodeGen() {
   );
 }
 
-export default CodeGen;
+export default CodeMenu;
