@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 
 import path from "path";
 
-import db from "@/db/db";
+import db from "@/db/database";
 
 export async function readFile(id: string) {
   const file = await fs.readFile(path.join(db, `${id}.json`), "utf-8");
