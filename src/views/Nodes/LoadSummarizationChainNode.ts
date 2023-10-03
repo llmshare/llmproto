@@ -5,15 +5,20 @@ import { ClassicPreset } from "rete";
 import LoadSummarizationChain from "@/models/Chains/LoadSummarizationChain";
 import { CheckboxControl } from "@/views/Components/Checkbox";
 import { DropdownControl } from "@/views/Components/Dropdown";
+import { LabelledInputControl } from "@/views/Components/LabelledInput";
 
 export default class LoadSummarizationChainNode extends ClassicPreset.Node<
   {},
   {},
-  { type: DropdownControl; returnIntermediateSteps: CheckboxControl }
+  {
+    instanceName: LabelledInputControl;
+    type: DropdownControl;
+    returnIntermediateSteps: CheckboxControl;
+  }
 > {
-  height = 200;
+  height = 180;
 
-  width = 280;
+  width = 380;
 
   private _chain: LoadSummarizationChain;
 
@@ -21,6 +26,22 @@ export default class LoadSummarizationChainNode extends ClassicPreset.Node<
     super("LoadSummarizationChain");
 
     this._chain = chain;
+
+    this.addControl(
+      "instanceName",
+      new LabelledInputControl(
+        "instance name",
+        "",
+        async (value) => {
+          const str = String(value);
+
+          if (!str) return;
+
+          await this.chain.setInstanceName(str);
+        },
+        "text",
+      ),
+    );
 
     this.addControl(
       "type",
@@ -44,5 +65,9 @@ export default class LoadSummarizationChainNode extends ClassicPreset.Node<
         },
       ),
     );
+  }
+
+  get chain(): LoadSummarizationChain {
+    return this._chain;
   }
 }

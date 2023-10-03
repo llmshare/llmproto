@@ -1,12 +1,5 @@
 import axios from "axios";
 
-import { setType } from "@/controllers/chain";
-
-// export const loadSummarizationChain = (
-//  llm: BaseLanguageModel,
-//  params: SummarizationChainParams = { type: "map_reduce" }
-// )
-
 export default class LoadSummarizationChain {
   private readonly _id: number;
 
@@ -41,13 +34,23 @@ export default class LoadSummarizationChain {
   }
 
   async setType(value: string) {
-    await setType(this.id, value);
+    await axios.post(`/api/chain/${this._id}`, {
+      type: "type",
+      value,
+    });
   }
 
   async setReturnIntermediateSteps(value: boolean) {
-    await axios(`/api/chain/${this._id}`, {
-      method: "POST",
-      data: { returnIntermediateSteps: value },
+    await axios.post(`/api/chain/${this._id}`, {
+      type: "returnIntermediateSteps",
+      value,
+    });
+  }
+
+  async setInstanceName(value: string) {
+    await axios.post(`/api/chain/${this._id}`, {
+      type: "instanceName",
+      value,
     });
   }
 }

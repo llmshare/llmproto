@@ -1,9 +1,8 @@
 "use client";
 
 import axios from "axios";
-import { useState } from "react";
 
-function CodeGen() {
+function CodeMenu() {
   // const [code, setCode] = useState("");
 
   const handleCodeGeneration = async () => {
@@ -11,9 +10,8 @@ function CodeGen() {
       id: "data",
     });
 
-    // setCode(generatedCode);
-
     const generatedCode = response.data.code;
+    // setCode(generatedCode);
 
     // download the generated code as a file
     const blob = new Blob([generatedCode], { type: "text/plain" });
@@ -39,7 +37,7 @@ function CodeGen() {
   return (
     <>
       {/* Enable the textarea during dev to preview generated code */}
-      {/* <textarea cols={70} rows={15} value={code} readOnly /> */}
+      {/* <textarea cols={70} rows={15} value={code} readOnly className="text-black"/> */}
       <button type="button" onClick={handleCodeGeneration}>
         Generate Code
       </button>
@@ -47,4 +45,4 @@ function CodeGen() {
   );
 }
 
-export default CodeGen;
+export default CodeMenu;

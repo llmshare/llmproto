@@ -17,10 +17,10 @@ export async function POST(
   context: { params: { id: string } },
 ) {
   const { id } = context.params;
-  const { temperature } = await request.json();
+  const { type, value } = await request.json();
 
   const parsedFile = await readFile(id);
-  parsedFile.llm.temperature = temperature;
+  parsedFile.llm[type] = value;
   await writeFile(id, parsedFile);
 
   return NextResponse.json({ message: "success" });

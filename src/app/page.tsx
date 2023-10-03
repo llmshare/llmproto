@@ -1,10 +1,10 @@
-import CodeGen from "@/app/CodeGen";
 import ReteView from "@/app/ReteView";
+import Menubar from "@/views/Components/Menubar/Menubar";
 
 export default function Home() {
   return (
     <main>
-      <CodeGen />
+      <Menubar />
       <ReteView />
     </main>
   );
