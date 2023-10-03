@@ -34,6 +34,8 @@
     "rete-engine": "^2.0.0",
     "rete-react-plugin": "^2.0.1",
     "rete-readonly-plugin": "^2.0.0",
+    "rete-render-utils": "^2.0.1",
+    "styled-components": "^6.0.8",
     "typescript": "5.2.2",
     "uuid": "^9.0.1"
   },
