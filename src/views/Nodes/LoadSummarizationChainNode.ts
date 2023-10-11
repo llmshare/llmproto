@@ -16,14 +16,14 @@ export default class LoadSummarizationChainNode extends ClassicPreset.Node<
     returnIntermediateSteps: CheckboxControl;
   }
 > {
-  height = 300;
+  height = 180;
 
   width = 380;
 
   private _chain: LoadSummarizationChain;
 
   constructor(chain: LoadSummarizationChain) {
-    super("LoadSummarizationChainxxx");
+    super("LoadSummarizationChain");
 
     this._chain = chain;
 
