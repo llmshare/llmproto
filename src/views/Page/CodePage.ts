@@ -15,7 +15,10 @@ import { Presets, ReactArea2D, ReactPlugin } from "rete-react-plugin";
 import { createChain } from "@/controllers/chain";
 import { createLangchain } from "@/controllers/generateCode";
 import { createLLMModel } from "@/controllers/openAI";
-import { createTextSplitter } from "@/controllers/textSplitter";
+import {
+  createCharacterTextSplitter,
+  createRecursiveCharacterTextSplitter,
+} from "@/controllers/textSplitter";
 import Button, { ButtonControl } from "@/views/Components/Button";
 import Checkbox, { CheckboxControl } from "@/views/Components/Checkbox";
 import Dropdown, { DropdownControl } from "@/views/Components/Dropdown";
@@ -25,6 +28,8 @@ import LabelledInput, {
 import ChainNode from "@/views/Nodes/LoadSummarizationChainNode";
 import OpenAINode from "@/views/Nodes/OpenAINode";
 import RecursiveCharacterTextSplitterNode from "@/views/Nodes/RecursiveCharacterTextSplitterNode";
+
+import CharacterTextSplitterNode from "../Nodes/CharacterTextSplitterNode";
 
 // type Node = OpenAINode | CodeNode;
 type Schemes = GetSchemes<any, any>; // TODO: Need to fix the Schemes type. It needs to hold the right Node type for giving better context in plugin configuration. WORKS FINE FOR NOW.
@@ -72,8 +77,7 @@ export default async function createEditor(container: HTMLElement) {
               return new OpenAINode(googlepalmAI, socket);
             },
           ],
-
-        ],      
+        ],
       ],
       [
         "Chain",
@@ -94,9 +98,20 @@ export default async function createEditor(container: HTMLElement) {
             "Recursive",
             async () => {
               const recursiveCharacterTextSplitter =
-                await createTextSplitter(id);
+                await createRecursiveCharacterTextSplitter(id);
               return new RecursiveCharacterTextSplitterNode(
                 recursiveCharacterTextSplitter,
+                socket,
+              );
+            },
+          ],
+          [
+            "Character",
+            async () => {
+              const characterTextSplitter =
+                await createCharacterTextSplitter(id);
+              return new CharacterTextSplitterNode(
+                characterTextSplitter,
                 socket,
               );
             },
