@@ -18,6 +18,7 @@ import { createLLMModel } from "@/controllers/openAI";
 import {
   createCharacterTextSplitter,
   createRecursiveCharacterTextSplitter,
+  createTokenTextSplitter,
 } from "@/controllers/textSplitter";
 import Button, { ButtonControl } from "@/views/Components/Button";
 import Checkbox, { CheckboxControl } from "@/views/Components/Checkbox";
@@ -25,11 +26,11 @@ import Dropdown, { DropdownControl } from "@/views/Components/Dropdown";
 import LabelledInput, {
   LabelledInputControl,
 } from "@/views/Components/LabelledInput";
+import CharacterTextSplitterNode from "@/views/Nodes/CharacterTextSplitterNode";
 import ChainNode from "@/views/Nodes/LoadSummarizationChainNode";
 import OpenAINode from "@/views/Nodes/OpenAINode";
 import RecursiveCharacterTextSplitterNode from "@/views/Nodes/RecursiveCharacterTextSplitterNode";
-
-import CharacterTextSplitterNode from "../Nodes/CharacterTextSplitterNode";
+import TokenTextSplitterNode from "@/views/Nodes/TokenTextSplitterNode";
 
 // type Node = OpenAINode | CodeNode;
 type Schemes = GetSchemes<any, any>; // TODO: Need to fix the Schemes type. It needs to hold the right Node type for giving better context in plugin configuration. WORKS FINE FOR NOW.
@@ -114,6 +115,13 @@ export default async function createEditor(container: HTMLElement) {
                 characterTextSplitter,
                 socket,
               );
+            },
+          ],
+          [
+            "Token",
+            async () => {
+              const tokenTextSplitter = await createTokenTextSplitter(id);
+              return new TokenTextSplitterNode(tokenTextSplitter, socket);
             },
           ],
         ],
