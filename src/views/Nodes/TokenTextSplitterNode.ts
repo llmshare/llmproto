@@ -13,7 +13,7 @@ export default class TokenTextSplitterNode extends ClassicPreset.Node<
     separator: LabelledInputControl;
   }
 > {
-  height = 180;
+  height = 280;
 
   width = 380;
 

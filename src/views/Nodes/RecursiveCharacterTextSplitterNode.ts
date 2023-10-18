@@ -13,7 +13,7 @@ export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.No
     separator: LabelledInputControl;
   }
 > {
-  height = 180;
+  height = 280;
 
   width = 380;
 
