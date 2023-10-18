@@ -6,7 +6,12 @@ import { LabelledInputControl } from "@/views/Components/LabelledInput";
 export default class CharacterTextSplitterNode extends ClassicPreset.Node<
   {},
   { output: ClassicPreset.Socket },
-  { instanceName: LabelledInputControl; chunkSize: LabelledInputControl }
+  {
+    instanceName: LabelledInputControl;
+    chunkSize: LabelledInputControl;
+    chunkOverlap: LabelledInputControl;
+    separator: LabelledInputControl;
+  }
 > {
   height = 180;
 
@@ -48,9 +53,41 @@ export default class CharacterTextSplitterNode extends ClassicPreset.Node<
 
           if (num < 0) return;
 
-          await this.characterTextSplitter.setCharacterTextSplitter(num);
+          await this.characterTextSplitter.setChunkSize(num);
         },
         "number",
+      ),
+    );
+
+    this.addControl(
+      "chunkOverlap",
+      new LabelledInputControl(
+        "chunk overlap",
+        200,
+        async (value) => {
+          const num = Number(value);
+
+          if (num < 0) return;
+
+          await this.characterTextSplitter.setChunkOverlap(num);
+        },
+        "number",
+      ),
+    );
+
+    this.addControl(
+      "separator",
+      new LabelledInputControl(
+        "separator",
+        "",
+        async (value) => {
+          const str = String(value);
+
+          if (!str) return;
+
+          await this.characterTextSplitter.setSeparator(str);
+        },
+        "text",
       ),
     );
 

@@ -11,9 +11,23 @@ export default class TokenTextSplitter {
     return this._id;
   }
 
-  async setTokenTextSplitter(value: number) {
+  async setChunkSize(value: number) {
     await axios.post(`/api/textSplitter/${this._id}`, {
       type: "chunkSize",
+      value,
+    });
+  }
+
+  async setChunkOverlap(value: number) {
+    await axios.post(`/api/textSplitter/${this._id}`, {
+      type: "chunkOverlap",
+      value,
+    });
+  }
+
+  async setSeparator(value: string) {
+    await axios.post(`/api/textSplitter/${this._id}`, {
+      type: "separator",
       value,
     });
   }

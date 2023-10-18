@@ -11,7 +11,12 @@ export async function POST(
   const parsedFile = await readFile(id);
   const data = {
     ...parsedFile,
-    textSplitter: { name: "CharacterTextSplitter", chunkSize: 1000 },
+    textSplitter: {
+      name: "CharacterTextSplitter",
+      chunkSize: 1000,
+      chunkOverlap: 200,
+      separator: "\n\n",
+    },
   };
   await writeFile(id, data);
 
