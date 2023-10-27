@@ -10,12 +10,13 @@ export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.No
     instanceName: LabelledInputControl;
     chunkSize: LabelledInputControl;
     chunkOverlap: LabelledInputControl;
-    separator: LabelledInputControl;
+    isSeparatorRegex: LabelledInputControl;
+    LengthFunction: LabelledInputControl;
   }
 > {
   height = 280;
 
-  width = 380;
+  width = 480;
 
   private _recursiveCharacterTextSplitter: RecursiveCharacterTextSplitter;
 
@@ -47,7 +48,7 @@ export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.No
       "chunkSize",
       new LabelledInputControl(
         "chunk size",
-        1000,
+        100,
         async (value) => {
           const num = Number(value);
 
@@ -63,7 +64,7 @@ export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.No
       "chunkOverlap",
       new LabelledInputControl(
         "chunk overlap",
-        200,
+        20,
         async (value) => {
           const num = Number(value);
 
@@ -76,16 +77,32 @@ export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.No
     );
 
     this.addControl(
-      "separator",
+      "LengthFunction",
       new LabelledInputControl(
-        "separator",
+        "length function",
         "",
         async (value) => {
           const str = String(value);
 
           if (!str) return;
 
-          await this.recursiveCharacterTextSplitter.setSeparator(str);
+          await this.recursiveCharacterTextSplitter.setLengthFunction(str);
+        },
+        "text",
+      ),
+    );
+
+    this.addControl(
+      "isSeparatorRegex",
+      new LabelledInputControl(
+        "is separator regex",
+        "False",
+        async (value) => {
+          const str = String(value);
+
+          if (!str) return;
+
+          await this.recursiveCharacterTextSplitter.setIsRegexSeparator(str);
         },
         "text",
       ),

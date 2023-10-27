@@ -25,9 +25,16 @@ export default class RecursiveCharacterTextSplitter {
     });
   }
 
-  async setSeparator(value: string) {
+  async setIsRegexSeparator(value: string) {
     await axios.post(`/api/textSplitter/${this._id}`, {
-      type: "separator",
+      type: "isSeparatoRegex",
+      value,
+    });
+  }
+
+  async setLengthFunction(value: string) {
+    await axios.post(`/api/textSplitter/${this._id}`, {
+      type: "LengthFunction",
       value,
     });
   }
