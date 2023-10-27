@@ -11,11 +11,13 @@ export default class CharacterTextSplitterNode extends ClassicPreset.Node<
     chunkSize: LabelledInputControl;
     chunkOverlap: LabelledInputControl;
     separator: LabelledInputControl;
+    isSeparatorRegex: LabelledInputControl;
+    LengthFunction: LabelledInputControl;
   }
 > {
   height = 280;
 
-  width = 380;
+  width = 480;
 
   private _characterTextSplitter: CharacterTextSplitter;
 
@@ -38,6 +40,22 @@ export default class CharacterTextSplitterNode extends ClassicPreset.Node<
           if (!str) return;
 
           await this.characterTextSplitter.setInstanceName(str);
+        },
+        "text",
+      ),
+    );
+
+    this.addControl(
+      "separator",
+      new LabelledInputControl(
+        "separator",
+        "",
+        async (value) => {
+          const str = String(value);
+
+          if (!str) return;
+
+          await this.characterTextSplitter.setSeparator(str);
         },
         "text",
       ),
@@ -76,16 +94,31 @@ export default class CharacterTextSplitterNode extends ClassicPreset.Node<
     );
 
     this.addControl(
-      "separator",
+      "LengthFunction",
       new LabelledInputControl(
-        "separator",
+        "length function",
         "",
         async (value) => {
           const str = String(value);
 
           if (!str) return;
 
-          await this.characterTextSplitter.setSeparator(str);
+          await this.characterTextSplitter.setLengthFunction(str);
+        },
+        "text",
+      ),
+    );
+    this.addControl(
+      "isSeparatorRegex",
+      new LabelledInputControl(
+        "is separator regex",
+        "False",
+        async (value) => {
+          const str = String(value);
+
+          if (!str) return;
+
+          await this.characterTextSplitter.setIsRegexSeparator(str);
         },
         "text",
       ),

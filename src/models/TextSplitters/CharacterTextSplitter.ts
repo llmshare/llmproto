@@ -32,6 +32,20 @@ export default class CharacterTextSplitter {
     });
   }
 
+  async setIsRegexSeparator(value: string) {
+    await axios.post(`/api/textSplitter/${this._id}`, {
+      type: "isSeparatorRegex",
+      value,
+    });
+  }
+
+  async setLengthFunction(value: string) {
+    await axios.post(`/api/textSplitter/${this._id}`, {
+      type: "LengthFunction",
+      value,
+    });
+  }
+
   async setInstanceName(value: string) {
     await axios.post(`/api/textSplitter/${this._id}`, {
       type: "instanceName",
