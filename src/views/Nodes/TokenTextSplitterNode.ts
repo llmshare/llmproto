@@ -10,7 +10,8 @@ export default class TokenTextSplitterNode extends ClassicPreset.Node<
     instanceName: LabelledInputControl;
     chunkSize: LabelledInputControl;
     chunkOverlap: LabelledInputControl;
-    separator: LabelledInputControl;
+    encodingName: LabelledInputControl;
+    ModelName: LabelledInputControl;
   }
 > {
   height = 280;
@@ -47,7 +48,7 @@ export default class TokenTextSplitterNode extends ClassicPreset.Node<
       "chunkSize",
       new LabelledInputControl(
         "chunk size",
-        1000,
+        10,
         async (value) => {
           const num = Number(value);
 
@@ -63,7 +64,7 @@ export default class TokenTextSplitterNode extends ClassicPreset.Node<
       "chunkOverlap",
       new LabelledInputControl(
         "chunk overlap",
-        200,
+        0,
         async (value) => {
           const num = Number(value);
 
@@ -76,16 +77,32 @@ export default class TokenTextSplitterNode extends ClassicPreset.Node<
     );
 
     this.addControl(
-      "separator",
+      "encodingName",
       new LabelledInputControl(
-        "separator",
+        "encoding name",
         "",
         async (value) => {
           const str = String(value);
 
           if (!str) return;
 
-          await this.tokenTextSplitter.setSeparator(str);
+          await this.tokenTextSplitter.setEncodingName(str);
+        },
+        "text",
+      ),
+    );
+
+    this.addControl(
+      "ModelName",
+      new LabelledInputControl(
+        "model name",
+        "",
+        async (value) => {
+          const str = String(value);
+
+          if (!str) return;
+
+          await this.tokenTextSplitter.setModelName(str);
         },
         "text",
       ),

@@ -25,9 +25,16 @@ export default class TokenTextSplitter {
     });
   }
 
-  async setSeparator(value: string) {
+  async setEncodingName(value: string) {
     await axios.post(`/api/textSplitter/${this._id}`, {
-      type: "separator",
+      type: "encodingName",
+      value,
+    });
+  }
+
+  async setModelName(value: string) {
+    await axios.post(`/api/textSplitter/${this._id}`, {
+      type: "modelName",
       value,
     });
   }
