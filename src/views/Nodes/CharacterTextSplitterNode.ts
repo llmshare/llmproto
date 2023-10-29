@@ -49,7 +49,7 @@ export default class CharacterTextSplitterNode extends ClassicPreset.Node<
       "separator",
       new LabelledInputControl(
         "separator",
-        "",
+        "\\n\\n",
         async (value) => {
           const str = String(value);
 

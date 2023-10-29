@@ -12,6 +12,7 @@ export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.No
     chunkOverlap: LabelledInputControl;
     isSeparatorRegex: LabelledInputControl;
     LengthFunction: LabelledInputControl;
+    separators: LabelledInputControl;
   }
 > {
   height = 280;
@@ -39,6 +40,22 @@ export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.No
           if (!str) return;
 
           await this.recursiveCharacterTextSplitter.setInstanceName(str);
+        },
+        "text",
+      ),
+    );
+
+    this.addControl(
+      "separators",
+      new LabelledInputControl(
+        "separators",
+        "",
+        async (value) => {
+          const str = String(value);
+
+          if (!str) return;
+
+          await this.recursiveCharacterTextSplitter.setSeparators(str);
         },
         "text",
       ),
@@ -119,3 +136,14 @@ export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.No
     this._recursiveCharacterTextSplitter = value;
   }
 }
+
+// text_splitter = RecursiveCharacterTextSplitter(
+//   chunk_size=800, X
+//   separators=["\n\n", "\n", ".", "!", "?", ",", " ", ""], MM
+//   chunk_overlap=20, X
+// )
+
+// text_splitter = RecursiveCharacterTextSplitter(
+//   chunk_size=1500, chunk_overlap=100,
+// add_start_index=True MM
+// )

@@ -45,4 +45,11 @@ export default class RecursiveCharacterTextSplitter {
       value,
     });
   }
+
+  async setSeparators(value: string) {
+    await axios.post(`/api/textSplitter/${this._id}`, {
+      type: "separators",
+      value,
+    });
+  }
 }

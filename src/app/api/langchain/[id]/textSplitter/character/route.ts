@@ -16,6 +16,8 @@ export async function POST(
       chunkSize: 1000,
       chunkOverlap: 200,
       separator: "\n\n",
+      isSeparatorRegex: "False",
+      LengthFunction: "",
     },
   };
   await writeFile(id, data);

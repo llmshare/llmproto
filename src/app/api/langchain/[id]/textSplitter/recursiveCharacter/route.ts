@@ -13,9 +13,11 @@ export async function POST(
     ...parsedFile,
     textSplitter: {
       name: "RecursiveCharacterTextSplitter",
-      chunkSize: 1000,
-      chunkOverlap: 200,
-      separator: "\n\n",
+      chunkSize: 100,
+      chunkOverlap: 20,
+      separators: "",
+      LengthFunction: "",
+      isSeparatorRegex: "",
     },
   };
   await writeFile(id, data);
