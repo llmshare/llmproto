@@ -13,9 +13,9 @@ export async function POST(
     ...parsedFile,
     textSplitter: {
       name: "TokenTextSplitter",
-      chunkSize: 1000,
-      chunkOverlap: 200,
-      separator: "\n\n",
+      chunkSize: 10,
+      chunkOverlap: 0,
+      encodingName: "gpt2",
     },
   };
   await writeFile(id, data);

@@ -32,13 +32,6 @@ export default class TokenTextSplitter {
     });
   }
 
-  async setModelName(value: string) {
-    await axios.post(`/api/textSplitter/${this._id}`, {
-      type: "modelName",
-      value,
-    });
-  }
-
   async setInstanceName(value: string) {
     await axios.post(`/api/textSplitter/${this._id}`, {
       type: "instanceName",

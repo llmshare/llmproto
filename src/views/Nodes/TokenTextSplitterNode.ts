@@ -80,29 +80,13 @@ export default class TokenTextSplitterNode extends ClassicPreset.Node<
       "encodingName",
       new LabelledInputControl(
         "encoding name",
-        "",
+        "gpt2",
         async (value) => {
           const str = String(value);
 
           if (!str) return;
 
           await this.tokenTextSplitter.setEncodingName(str);
-        },
-        "text",
-      ),
-    );
-
-    this.addControl(
-      "ModelName",
-      new LabelledInputControl(
-        "model name",
-        "",
-        async (value) => {
-          const str = String(value);
-
-          if (!str) return;
-
-          await this.tokenTextSplitter.setModelName(str);
         },
         "text",
       ),

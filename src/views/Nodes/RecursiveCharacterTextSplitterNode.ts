@@ -136,14 +136,3 @@ export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.No
     this._recursiveCharacterTextSplitter = value;
   }
 }
-
-// text_splitter = RecursiveCharacterTextSplitter(
-//   chunk_size=800, X
-//   separators=["\n\n", "\n", ".", "!", "?", ",", " ", ""], MM
-//   chunk_overlap=20, X
-// )
-
-// text_splitter = RecursiveCharacterTextSplitter(
-//   chunk_size=1500, chunk_overlap=100,
-// add_start_index=True MM
-// )
