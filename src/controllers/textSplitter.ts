@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import CharacterTextSplitter from "@/models/TextSplitters/CharacterTextSplitter";
+import MarkdownHeaderTextSplitter from "@/models/TextSplitters/markdownheaderTextSplitter";
 import RecursiveCharacterTextSplitter from "@/models/TextSplitters/RecursiveCharacterTextSplitter";
 import TokenTextSplitter from "@/models/TextSplitters/TokenTextSplitter";
 
@@ -15,10 +16,17 @@ export const createCharacterTextSplitter = async (id: string) => {
 
   return new CharacterTextSplitter(id);
 };
+
 export const createTokenTextSplitter = async (id: string) => {
   await axios.post(`/api/langchain/${id}/textSplitter/token`);
 
   return new TokenTextSplitter(id);
+};
+
+export const createMarkdownHeaderTextSplitter = async (id: string) => {
+  await axios.post(`/api/langchain/${id}/textSplitter/markdownheader`);
+  // HeadersToSplitOn
+  return new MarkdownHeaderTextSplitter(id);
 };
 
 export const setTemperature = async (id: string, chunkSize: number) => {

@@ -17,6 +17,7 @@ import { createLangchain } from "@/controllers/generateCode";
 import { createLLMModel } from "@/controllers/openAI";
 import {
   createCharacterTextSplitter,
+  createMarkdownHeaderTextSplitter,
   createRecursiveCharacterTextSplitter,
   createTokenTextSplitter,
 } from "@/controllers/textSplitter";
@@ -31,6 +32,8 @@ import ChainNode from "@/views/Nodes/LoadSummarizationChainNode";
 import OpenAINode from "@/views/Nodes/OpenAINode";
 import RecursiveCharacterTextSplitterNode from "@/views/Nodes/RecursiveCharacterTextSplitterNode";
 import TokenTextSplitterNode from "@/views/Nodes/TokenTextSplitterNode";
+
+import MarkdownHeaderTextSplitterNode from "../Nodes/MarkdownHeaderTextSplitterNode";
 
 // type Node = OpenAINode | CodeNode;
 type Schemes = GetSchemes<any, any>; // TODO: Need to fix the Schemes type. It needs to hold the right Node type for giving better context in plugin configuration. WORKS FINE FOR NOW.
@@ -122,6 +125,17 @@ export default async function createEditor(container: HTMLElement) {
             async () => {
               const tokenTextSplitter = await createTokenTextSplitter(id);
               return new TokenTextSplitterNode(tokenTextSplitter, socket);
+            },
+          ],
+          [
+            "MarkdownHeader",
+            async () => {
+              const markdownHeaderTextSplitter =
+                await createMarkdownHeaderTextSplitter(id);
+              return new MarkdownHeaderTextSplitterNode(
+                markdownHeaderTextSplitter,
+                socket,
+              );
             },
           ],
         ],
