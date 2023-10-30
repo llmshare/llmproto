@@ -17,6 +17,7 @@ import { createLangchain } from "@/controllers/generateCode";
 import { createLLMModel } from "@/controllers/openAI";
 import {
   createCharacterTextSplitter,
+  createHTMLHeaderTextSplitter,
   createMarkdownHeaderTextSplitter,
   createRecursiveCharacterTextSplitter,
   createTokenTextSplitter,
@@ -33,6 +34,7 @@ import OpenAINode from "@/views/Nodes/OpenAINode";
 import RecursiveCharacterTextSplitterNode from "@/views/Nodes/RecursiveCharacterTextSplitterNode";
 import TokenTextSplitterNode from "@/views/Nodes/TokenTextSplitterNode";
 
+import HTMLHeaderTextSplitterNode from "../Nodes/HTMLHeaderTextSplitterNode";
 import MarkdownHeaderTextSplitterNode from "../Nodes/MarkdownHeaderTextSplitterNode";
 
 // type Node = OpenAINode | CodeNode;
@@ -63,22 +65,6 @@ export default async function createEditor(container: HTMLElement) {
             async () => {
               const openAI = await createLLMModel(id);
               return new OpenAINode(openAI, socket);
-            },
-          ],
-
-          [
-            "CohereAI",
-            async () => {
-              const openAI = await createLLMModel(id);
-              return new OpenAINode(cohereAI, socket);
-            },
-          ],
-
-          [
-            "GooglePalmAI",
-            async () => {
-              const openAI = await createLLMModel(id);
-              return new OpenAINode(googlepalmAI, socket);
             },
           ],
         ],
@@ -128,15 +114,31 @@ export default async function createEditor(container: HTMLElement) {
             },
           ],
           [
-            "MarkdownHeader",
-            async () => {
-              const markdownHeaderTextSplitter =
-                await createMarkdownHeaderTextSplitter(id);
-              return new MarkdownHeaderTextSplitterNode(
-                markdownHeaderTextSplitter,
-                socket,
-              );
-            },
+            "Header",
+            [
+              [
+                "Markdown ",
+                async () => {
+                  const markdownHeaderTextSplitter =
+                    await createMarkdownHeaderTextSplitter(id);
+                  return new MarkdownHeaderTextSplitterNode(
+                    markdownHeaderTextSplitter,
+                    socket,
+                  );
+                },
+              ],
+              [
+                "HTML ",
+                async () => {
+                  const htmlHeaderTextSplitter =
+                    await createHTMLHeaderTextSplitter(id);
+                  return new HTMLHeaderTextSplitterNode(
+                    htmlHeaderTextSplitter,
+                    socket,
+                  );
+                },
+              ],
+            ],
           ],
         ],
       ],

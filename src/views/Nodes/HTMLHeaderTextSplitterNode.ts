@@ -1,9 +1,9 @@
 import { ClassicPreset } from "rete";
 
-import MarkdownHeaderTextSplitter from "@/models/TextSplitters/MarkdownHeaderTextSplitter";
+import HTMLHeaderTextSplitter from "@/models/TextSplitters/HTMLHeaderTextSplitter";
 import { LabelledInputControl } from "@/views/Components/LabelledInput";
 
-export default class MarkdownHeaderTextSplitterNode extends ClassicPreset.Node<
+export default class HTMLHeaderTextSplitterNode extends ClassicPreset.Node<
   {},
   { output: ClassicPreset.Socket },
   {
@@ -15,15 +15,15 @@ export default class MarkdownHeaderTextSplitterNode extends ClassicPreset.Node<
 
   width = 450;
 
-  private _markdownHeaderTextSplitter: MarkdownHeaderTextSplitter;
+  private _markdownHeaderTextSplitter: HTMLHeaderTextSplitter;
 
   constructor(
-    markdownHeaderTextSplitter: MarkdownHeaderTextSplitter,
+    htmlHeaderTextSplitter: HTMLHeaderTextSplitter,
     socket: ClassicPreset.Socket,
   ) {
-    super("MarkdownHeaderTextSplitter");
+    super("HTMLHeaderTextSplitter");
 
-    this._markdownHeaderTextSplitter = markdownHeaderTextSplitter;
+    this._markdownHeaderTextSplitter = htmlHeaderTextSplitter;
 
     this.addControl(
       "instanceName",
@@ -35,7 +35,7 @@ export default class MarkdownHeaderTextSplitterNode extends ClassicPreset.Node<
 
           if (!str) return;
 
-          await this.markdownHeaderTextSplitter.setInstanceName(str);
+          await this.htmlHeaderTextSplitter.setInstanceName(str);
         },
         "text",
       ),
@@ -51,7 +51,7 @@ export default class MarkdownHeaderTextSplitterNode extends ClassicPreset.Node<
 
           if (!str) return;
 
-          await this.markdownHeaderTextSplitter.setHeadersToSplitOn(str);
+          await this.htmlHeaderTextSplitter.setHeadersToSplitOn(str);
         },
         "text",
       ),
@@ -60,11 +60,11 @@ export default class MarkdownHeaderTextSplitterNode extends ClassicPreset.Node<
     this.addOutput("output", new ClassicPreset.Output(socket));
   }
 
-  get markdownHeaderTextSplitter(): MarkdownHeaderTextSplitter {
+  get htmlHeaderTextSplitter(): HTMLHeaderTextSplitter {
     return this._markdownHeaderTextSplitter;
   }
 
-  set markdownHeaderTextSplitter(value: MarkdownHeaderTextSplitter) {
+  set htmlHeaderTextSplitter(value: HTMLHeaderTextSplitter) {
     this._markdownHeaderTextSplitter = value;
   }
 }
