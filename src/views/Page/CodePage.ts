@@ -73,16 +73,16 @@ export default async function createEditor(container: HTMLElement) {
           [
             "CohereAI",
             async () => {
-              const openAI = await createLLMModel(id);
-              return new OpenAINode(cohereAI, socket);
+              const cohereAI = await createLLMModel(id);
+              return new CohereAINode(cohereAI, socket);
             },
           ],
 
           [
             "GooglePalmAI",
             async () => {
-              const openAI = await createLLMModel(id);
-              return new OpenAINode(googlepalmAI, socket);
+              const googlepalmAI = await createLLMModel(id);
+              return new GooglePalmAINode(googlepalmAI, socket);
             },
           ],
         ],
