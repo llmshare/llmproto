@@ -15,16 +15,29 @@ import { Presets, ReactArea2D, ReactPlugin } from "rete-react-plugin";
 import { createChain } from "@/controllers/chain";
 import { createLangchain } from "@/controllers/generateCode";
 import { createLLMModel } from "@/controllers/openAI";
-import { createTextSplitter } from "@/controllers/textSplitter";
+import {
+  createCharacterTextSplitter,
+  createHTMLHeaderTextSplitter,
+  createMarkdownHeaderTextSplitter,
+  createRecursiveCharacterTextSplitter,
+  createRecursivelanguageCharacterTextSplitter,
+  createTokenTextSplitter,
+} from "@/controllers/textSplitter";
 import Button, { ButtonControl } from "@/views/Components/Button";
 import Checkbox, { CheckboxControl } from "@/views/Components/Checkbox";
 import Dropdown, { DropdownControl } from "@/views/Components/Dropdown";
 import LabelledInput, {
   LabelledInputControl,
 } from "@/views/Components/LabelledInput";
+import CharacterTextSplitterNode from "@/views/Nodes/CharacterTextSplitterNode";
 import ChainNode from "@/views/Nodes/LoadSummarizationChainNode";
 import OpenAINode from "@/views/Nodes/OpenAINode";
 import RecursiveCharacterTextSplitterNode from "@/views/Nodes/RecursiveCharacterTextSplitterNode";
+import TokenTextSplitterNode from "@/views/Nodes/TokenTextSplitterNode";
+
+import HTMLHeaderTextSplitterNode from "../Nodes/HTMLHeaderTextSplitterNode";
+import MarkdownHeaderTextSplitterNode from "../Nodes/MarkdownHeaderTextSplitterNode";
+import RecursivelanguageCharacterTextSplitterNode from "../Nodes/RecursivelanguageCharacterTextSplitterNode";
 
 // type Node = OpenAINode | CodeNode;
 type Schemes = GetSchemes<any, any>; // TODO: Need to fix the Schemes type. It needs to hold the right Node type for giving better context in plugin configuration. WORKS FINE FOR NOW.
@@ -72,8 +85,7 @@ export default async function createEditor(container: HTMLElement) {
               return new GooglePalmAINode(googlepalmAI, socket);
             },
           ],
-
-        ],      
+        ],
       ],
       [
         "Chain",
@@ -92,14 +104,75 @@ export default async function createEditor(container: HTMLElement) {
         [
           [
             "Recursive",
+            [
+              [
+                "by_character",
+                async () => {
+                  const recursiveCharacterTextSplitter =
+                    await createRecursiveCharacterTextSplitter(id);
+                  return new RecursiveCharacterTextSplitterNode(
+                    recursiveCharacterTextSplitter,
+                    socket,
+                  );
+                },
+              ],
+              [
+                "from_language",
+                async () => {
+                  const RecursivelanguageCharacterTextSplitter =
+                    await createRecursivelanguageCharacterTextSplitter(id);
+                  return new RecursivelanguageCharacterTextSplitterNode(
+                    RecursivelanguageCharacterTextSplitter,
+                    socket,
+                  );
+                },
+              ],
+            ],
+          ],
+          [
+            "Character",
             async () => {
-              const recursiveCharacterTextSplitter =
-                await createTextSplitter(id);
-              return new RecursiveCharacterTextSplitterNode(
-                recursiveCharacterTextSplitter,
+              const characterTextSplitter =
+                await createCharacterTextSplitter(id);
+              return new CharacterTextSplitterNode(
+                characterTextSplitter,
                 socket,
               );
             },
+          ],
+          [
+            "Token",
+            async () => {
+              const tokenTextSplitter = await createTokenTextSplitter(id);
+              return new TokenTextSplitterNode(tokenTextSplitter, socket);
+            },
+          ],
+          [
+            "Header",
+            [
+              [
+                "Markdown ",
+                async () => {
+                  const markdownHeaderTextSplitter =
+                    await createMarkdownHeaderTextSplitter(id);
+                  return new MarkdownHeaderTextSplitterNode(
+                    markdownHeaderTextSplitter,
+                    socket,
+                  );
+                },
+              ],
+              [
+                "HTML ",
+                async () => {
+                  const htmlHeaderTextSplitter =
+                    await createHTMLHeaderTextSplitter(id);
+                  return new HTMLHeaderTextSplitterNode(
+                    htmlHeaderTextSplitter,
+                    socket,
+                  );
+                },
+              ],
+            ],
           ],
         ],
       ],

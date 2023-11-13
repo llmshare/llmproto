@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export default class RecursiveCharacterTextSplitter {
+export default class CharacterTextSplitter {
   private readonly _id: string;
 
   constructor(id: string) {
@@ -25,9 +25,16 @@ export default class RecursiveCharacterTextSplitter {
     });
   }
 
+  async setSeparator(value: string) {
+    await axios.post(`/api/textSplitter/${this._id}`, {
+      type: "separator",
+      value,
+    });
+  }
+
   async setIsRegexSeparator(value: string) {
     await axios.post(`/api/textSplitter/${this._id}`, {
-      type: "isSeparatoRegex",
+      type: "isSeparatorRegex",
       value,
     });
   }
@@ -42,13 +49,6 @@ export default class RecursiveCharacterTextSplitter {
   async setInstanceName(value: string) {
     await axios.post(`/api/textSplitter/${this._id}`, {
       type: "instanceName",
-      value,
-    });
-  }
-
-  async setSeparators(value: string) {
-    await axios.post(`/api/textSplitter/${this._id}`, {
-      type: "separators",
       value,
     });
   }

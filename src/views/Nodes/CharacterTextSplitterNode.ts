@@ -1,33 +1,33 @@
 import { ClassicPreset } from "rete";
 
-import RecursiveCharacterTextSplitter from "@/models/TextSplitters/RecursiveCharacterTextSplitter";
+import CharacterTextSplitter from "@/models/TextSplitters/CharacterTextSplitter";
 import { LabelledInputControl } from "@/views/Components/LabelledInput";
 
-export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.Node<
+export default class CharacterTextSplitterNode extends ClassicPreset.Node<
   {},
   { output: ClassicPreset.Socket },
   {
     instanceName: LabelledInputControl;
     chunkSize: LabelledInputControl;
     chunkOverlap: LabelledInputControl;
+    separator: LabelledInputControl;
     isSeparatorRegex: LabelledInputControl;
     LengthFunction: LabelledInputControl;
-    separators: LabelledInputControl;
   }
 > {
   height = 280;
 
   width = 480;
 
-  private _recursiveCharacterTextSplitter: RecursiveCharacterTextSplitter;
+  private _characterTextSplitter: CharacterTextSplitter;
 
   constructor(
-    recursiveCharacterTextSplitter: RecursiveCharacterTextSplitter,
+    characterTextSplitter: CharacterTextSplitter,
     socket: ClassicPreset.Socket,
   ) {
-    super("RecursiveCharacterTextSplitter");
+    super("CharacterTextSplitter");
 
-    this._recursiveCharacterTextSplitter = recursiveCharacterTextSplitter;
+    this._characterTextSplitter = characterTextSplitter;
 
     this.addControl(
       "instanceName",
@@ -39,23 +39,23 @@ export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.No
 
           if (!str) return;
 
-          await this.recursiveCharacterTextSplitter.setInstanceName(str);
+          await this.characterTextSplitter.setInstanceName(str);
         },
         "text",
       ),
     );
 
     this.addControl(
-      "separators",
+      "separator",
       new LabelledInputControl(
-        "separators",
-        "",
+        "separator",
+        "\\n\\n",
         async (value) => {
           const str = String(value);
 
           if (!str) return;
 
-          await this.recursiveCharacterTextSplitter.setSeparators(str);
+          await this.characterTextSplitter.setSeparator(str);
         },
         "text",
       ),
@@ -65,13 +65,13 @@ export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.No
       "chunkSize",
       new LabelledInputControl(
         "chunk size",
-        100,
+        1000,
         async (value) => {
           const num = Number(value);
 
           if (num < 0) return;
 
-          await this.recursiveCharacterTextSplitter.setChunkSize(num);
+          await this.characterTextSplitter.setChunkSize(num);
         },
         "number",
       ),
@@ -81,13 +81,13 @@ export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.No
       "chunkOverlap",
       new LabelledInputControl(
         "chunk overlap",
-        20,
+        200,
         async (value) => {
           const num = Number(value);
 
           if (num < 0) return;
 
-          await this.recursiveCharacterTextSplitter.setChunkOverlap(num);
+          await this.characterTextSplitter.setChunkOverlap(num);
         },
         "number",
       ),
@@ -103,12 +103,11 @@ export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.No
 
           if (!str) return;
 
-          await this.recursiveCharacterTextSplitter.setLengthFunction(str);
+          await this.characterTextSplitter.setLengthFunction(str);
         },
         "text",
       ),
     );
-
     this.addControl(
       "isSeparatorRegex",
       new LabelledInputControl(
@@ -119,7 +118,7 @@ export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.No
 
           if (!str) return;
 
-          await this.recursiveCharacterTextSplitter.setIsRegexSeparator(str);
+          await this.characterTextSplitter.setIsRegexSeparator(str);
         },
         "text",
       ),
@@ -128,11 +127,11 @@ export default class RecursiveCharacterTextSplitterNode extends ClassicPreset.No
     this.addOutput("output", new ClassicPreset.Output(socket));
   }
 
-  get recursiveCharacterTextSplitter(): RecursiveCharacterTextSplitter {
-    return this._recursiveCharacterTextSplitter;
+  get characterTextSplitter(): CharacterTextSplitter {
+    return this._characterTextSplitter;
   }
 
-  set recursiveCharacterTextSplitter(value: RecursiveCharacterTextSplitter) {
-    this._recursiveCharacterTextSplitter = value;
+  set characterTextSplitter(value: CharacterTextSplitter) {
+    this._characterTextSplitter = value;
   }
 }
