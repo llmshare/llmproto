@@ -4,11 +4,21 @@ import CharacterTextSplitter from "@/models/TextSplitters/CharacterTextSplitter"
 import HTMLHeaderTextSplitter from "@/models/TextSplitters/HTMLHeaderTextSplitter";
 import MarkdownHeaderTextSplitter from "@/models/TextSplitters/MarkdownHeaderTextSplitter";
 import RecursiveCharacterTextSplitter from "@/models/TextSplitters/RecursiveCharacterTextSplitter";
+import RecursivelanguageCharacterTextSplitter from "@/models/TextSplitters/RecursivelanguageCharacterTextSplitter";
 import TokenTextSplitter from "@/models/TextSplitters/TokenTextSplitter";
 
 export const createRecursiveCharacterTextSplitter = async (id: string) => {
   await axios.post(`/api/langchain/${id}/textSplitter/recursiveCharacter`);
   return new RecursiveCharacterTextSplitter(id);
+};
+
+export const createRecursivelanguageCharacterTextSplitter = async (
+  id: string,
+) => {
+  await axios.post(
+    `/api/langchain/${id}/textSplitter/recursivelanguageCharacter`,
+  );
+  return new RecursivelanguageCharacterTextSplitter(id);
 };
 
 export const createCharacterTextSplitter = async (id: string) => {

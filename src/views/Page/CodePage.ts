@@ -20,6 +20,7 @@ import {
   createHTMLHeaderTextSplitter,
   createMarkdownHeaderTextSplitter,
   createRecursiveCharacterTextSplitter,
+  createRecursivelanguageCharacterTextSplitter,
   createTokenTextSplitter,
 } from "@/controllers/textSplitter";
 import Button, { ButtonControl } from "@/views/Components/Button";
@@ -36,6 +37,7 @@ import TokenTextSplitterNode from "@/views/Nodes/TokenTextSplitterNode";
 
 import HTMLHeaderTextSplitterNode from "../Nodes/HTMLHeaderTextSplitterNode";
 import MarkdownHeaderTextSplitterNode from "../Nodes/MarkdownHeaderTextSplitterNode";
+import RecursivelanguageCharacterTextSplitterNode from "../Nodes/RecursivelanguageCharacterTextSplitterNode";
 
 // type Node = OpenAINode | CodeNode;
 type Schemes = GetSchemes<any, any>; // TODO: Need to fix the Schemes type. It needs to hold the right Node type for giving better context in plugin configuration. WORKS FINE FOR NOW.
@@ -102,14 +104,30 @@ export default async function createEditor(container: HTMLElement) {
         [
           [
             "Recursive",
-            async () => {
-              const recursiveCharacterTextSplitter =
-                await createRecursiveCharacterTextSplitter(id);
-              return new RecursiveCharacterTextSplitterNode(
-                recursiveCharacterTextSplitter,
-                socket,
-              );
-            },
+            [
+              [
+                "by_character",
+                async () => {
+                  const recursiveCharacterTextSplitter =
+                    await createRecursiveCharacterTextSplitter(id);
+                  return new RecursiveCharacterTextSplitterNode(
+                    recursiveCharacterTextSplitter,
+                    socket,
+                  );
+                },
+              ],
+              [
+                "from_language",
+                async () => {
+                  const RecursivelanguageCharacterTextSplitter =
+                    await createRecursivelanguageCharacterTextSplitter(id);
+                  return new RecursivelanguageCharacterTextSplitterNode(
+                    RecursivelanguageCharacterTextSplitter,
+                    socket,
+                  );
+                },
+              ],
+            ],
           ],
           [
             "Character",
