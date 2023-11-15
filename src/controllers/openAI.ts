@@ -2,7 +2,7 @@ import axios from "axios";
 
 import OpenAI from "@/models/BaseLLM/OpenAI";
 
-export const createLLMModel = async (id: string) => {
+export const createOpenAiLLMModel = async (id: string) => {
   await axios.post(`/api/langchain/${id}/llm`);
 
   return new OpenAI(id);

@@ -2,7 +2,7 @@ import axios from "axios";
 
 import CohereAI from "@/models/BaseLLM/CohereAI";
 
-export const createLLMModel = async (id: string) => {
+export const createCohereAiLLMModel = async (id: string) => {
   await axios.post(`/api/langchain/${id}/llm`);
 
   return new CohereAI(id);

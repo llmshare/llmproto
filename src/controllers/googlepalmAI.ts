@@ -2,7 +2,7 @@ import axios from "axios";
 
 import GooglePalmAI from "@/models/BaseLLM/GooglePalmAI";
 
-export const createLLMModel = async (id: string) => {
+export const createGooglePalmAiLLMModel = async (id: string) => {
   await axios.post(`/api/langchain/${id}/llm`);
 
   return new GooglePalmAI(id);
