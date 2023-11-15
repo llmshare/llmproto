@@ -13,8 +13,10 @@ import {
 import { Presets, ReactArea2D, ReactPlugin } from "rete-react-plugin";
 
 import { createChain } from "@/controllers/chain";
+import { createCohereAiLLMModel } from "@/controllers/cohereAI";
 import { createLangchain } from "@/controllers/generateCode";
-import { createLLMModel } from "@/controllers/openAI";
+import { createGooglePalmAiLLMModel } from "@/controllers/googlepalmAI";
+import { createOpenAiLLMModel } from "@/controllers/openAI";
 import { createTextSplitter } from "@/controllers/textSplitter";
 import Button, { ButtonControl } from "@/views/Components/Button";
 import Checkbox, { CheckboxControl } from "@/views/Components/Checkbox";
@@ -25,6 +27,9 @@ import LabelledInput, {
 import ChainNode from "@/views/Nodes/LoadSummarizationChainNode";
 import OpenAINode from "@/views/Nodes/OpenAINode";
 import RecursiveCharacterTextSplitterNode from "@/views/Nodes/RecursiveCharacterTextSplitterNode";
+
+import CohereAINode from "../Nodes/CohereAINode";
+import GooglePalmAINode from "../Nodes/GooglePalmAINode";
 
 // type Node = OpenAINode | CodeNode;
 type Schemes = GetSchemes<any, any>; // TODO: Need to fix the Schemes type. It needs to hold the right Node type for giving better context in plugin configuration. WORKS FINE FOR NOW.
@@ -52,7 +57,7 @@ export default async function createEditor(container: HTMLElement) {
           [
             "OpenAI",
             async () => {
-              const openAI = await createLLMModel(id);
+              const openAI = await createOpenAiLLMModel(id);
               return new OpenAINode(openAI, socket);
             },
           ],
@@ -60,7 +65,7 @@ export default async function createEditor(container: HTMLElement) {
           [
             "CohereAI",
             async () => {
-              const cohereAI = await createLLMModel(id);
+              const cohereAI = await createCohereAiLLMModel(id);
               return new CohereAINode(cohereAI, socket);
             },
           ],
@@ -68,12 +73,11 @@ export default async function createEditor(container: HTMLElement) {
           [
             "GooglePalmAI",
             async () => {
-              const googlepalmAI = await createLLMModel(id);
+              const googlepalmAI = await createGooglePalmAiLLMModel(id);
               return new GooglePalmAINode(googlepalmAI, socket);
             },
           ],
-
-        ],      
+        ],
       ],
       [
         "Chain",
